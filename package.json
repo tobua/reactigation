@@ -1,0 +1,19 @@
+{
+  "name": "reactigation",
+  "description": "React-only Navigation for React Native.",
+  "version": "1.0.0",
+  "author": "Matthias Giger",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "",
+    "app": "babel-node create-app"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.3.4",
+    "recursive-copy": "^2.0.10",
+    "rimraf": "^2.6.3"
+  }
+}
