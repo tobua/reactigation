@@ -1,6 +1,6 @@
 # Reactigation
 
-React-only Navigation for React Native.
+JS-only Navigation for React Native.
 
 ## Getting Started
 
@@ -10,14 +10,14 @@ npm i reactigation
 
 ## Usage
 
-```js
+```jsx
 // App.js
 import React from 'react'
 import { View, Text, TouchableHighlight } from 'react-native'
 import Reactigation, { register, go, back } from 'reacigation'
 
-const FirstScreen = () => (
-  <View>
+const FirstScreen = (
+  <View key="FirstScreen">
     <Text>FirstScreen</Text>
     <TouchableHighlight onPress={() => go('Second')}>
       <Text>go to SecondScreen</Text>
@@ -25,8 +25,8 @@ const FirstScreen = () => (
   </View>
 )
 
-const SecondScreen = () => (
-  <View>
+const SecondScreen = (
+  <View key="SecondScreen">
     <Text>FirstScreen</Text>
     <TouchableHighlight onPress={() => back()}>
       <Text>go back</Text>
@@ -34,20 +34,17 @@ const SecondScreen = () => (
   </View>
 )
 
-register(FirstScreen, 'First')
-register(SecondScreen, 'Second')
+register(FirstScreen)
+register(SecondScreen)
 
 export default Reactigation
 ```
 
-## Example
+## Running the Example App
 
-To run the example app checkout this repository and run the following inside
-the root folder
+The example app shown on top is found in the repository. Run it by cloning this repository and then executing the following commands inside the main directory.
 
-```
 npm install
-npm run app
+npm run app --silent
 cd app
 react-native run-ios
-```

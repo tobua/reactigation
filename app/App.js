@@ -1,68 +1,209 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
-import Reactigation, { register, go, back } from 'reactigation'
+import React, { Component, PureComponent } from 'react'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableHighlight,
+  Platform
+} from 'react-native'
+import Reactigation, { register, go, back, currentScreen } from 'reactigation'
+
+// Shadow styles with iOS Compatibility (elevation).
+const shadow = () => ({
+  shadowOpacity: 0.25,
+  shadowRadius: 3,
+  shadowOffset: {
+    height: 0
+  },
+  elevation: 5
+})
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
-    paddingTop: 50,
-    paddingRight: 20,
+    flex: 1
+  },
+  header: {
+    backgroundColor: 'white',
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
     paddingBottom: 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    ...shadow()
+  },
+  body: {
+    flex: 1,
+    paddingBottom: 20,
+    paddingRight: 20,
     paddingLeft: 20
   },
-  title: {
-    fontSize: 30,
+  backTouchable: {
+    flex: 1,
+    backgroundColor: 'black',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 5,
+    marginRight: 10,
+    borderWidth: 2,
+    borderColor: 'black'
+  },
+  back: {
+    color: 'white',
+    fontSize: 15,
     fontWeight: 'bold'
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold'
+  },
+  headerPlaceholder: {
+    flex: 1
   },
   description: {
     fontSize: 25
+  },
+  tabs: {
+    backgroundColor: 'white',
+    ...shadow(),
+    paddingTop: 20,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    paddingRight: 20,
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   }
 })
 
-class FirstScreen extends Component {
+class Screen extends Component {
+  constructor(props) {
+    super(props)
+    console.log(props.title, 'const')
+  }
+
+  renderTabs() {
+    const tabs = ['First', 'Second', 'Third']
+    const current = currentScreen()
+
+    return tabs.map(name => (
+      <TouchableOpacity key={name} onPress={() => go(name)}>
+        <Text style={[
+          styles.description, current === name ? { fontWeight: 'bold' } : undefined
+        ]}>{name}</Text>
+      </TouchableOpacity>
+    ))
+  }
+
+  renderLinks() {
+    const { links } = this.props
+
+    return links.map(name => (
+      <TouchableHighlight key={name} onPress={() => go(name)}>
+        <Text style={styles.description}>Go to {name}Screen</Text>
+      </TouchableHighlight>
+    ))
+  }
+
+  renderBack() {
+    const { backPossible } = this.props
+
+    if (!backPossible) {
+      return <View style={styles.headerPlaceholder} />
+    }
+
+    return (
+      <TouchableHighlight underlayColor="white" style={styles.backTouchable} onPress={() => back()}>
+        <Text style={styles.back}>Back</Text>
+      </TouchableHighlight>
+    )
+  }
+
   render() {
+    const { title } = this.props
+
     return (
       <View style={styles.screen}>
-        <Text style={styles.title}>FirstScreen</Text>
-        <TouchableHighlight onPress={() => go('Second')}>
-          <Text style={styles.description}>Go to SecondScreen</Text>
+        <View style={styles.header}>
+          {this.renderBack()}
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.headerPlaceholder} />
+        </View>
+        <View style={styles.body}>
+          {this.renderLinks()}
+          <TouchableHighlight onPress={() => go('Modal')}>
+            <Text style={styles.description}>Open Modal</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.tabs}>
+          {this.renderTabs()}
+        </View>
+      </View>
+    )
+  }
+}
+
+const stylesModal = StyleSheet.create({
+  modal: {
+    flex: 1,
+    flexDirection: 'column',
+    paddingTop: Platform.OS === 'ios' ? 50 : 20,
+    paddingBottom: 20,
+    paddingRight: 20,
+    paddingLeft: 20
+  },
+  closeTouchable: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 20,
+    right: 20,
+    backgroundColor: 'black',
+    padding: 5,
+    borderRadius: 5,
+    zIndex: 2
+  },
+  close: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'bold'
+  }
+})
+
+class Modal extends Component {
+  render() {
+    const { title } = this.props
+
+    return (
+      <View style={stylesModal.modal}>
+        <TouchableHighlight underlayColor="white" style={stylesModal.closeTouchable} onPress={() => back()}>
+          <Text style={stylesModal.close}>Close</Text>
+        </TouchableHighlight>
+        <Text style={styles.title}>{title}</Text>
+        <TouchableHighlight onPress={() => go('AnotherModal')}>
+          <Text style={styles.description}>Open Another Modal</Text>
         </TouchableHighlight>
       </View>
     )
   }
 }
 
-class SecondScreen extends Component {
-  render() {
-    return (
-      <View style={styles.screen}>
-        <Text style={styles.title}>SecondScreen</Text>
-        <TouchableHighlight onPress={() => go('First')}>
-          <Text style={styles.description}>Go to FirstScreen</Text>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => go('Third')}>
-          <Text style={styles.description}>Go to ThirdScreen</Text>
-        </TouchableHighlight>
-      </View>
-    )
-  }
+// All possible screen components.
+const Screens = {
+  First: <Screen key="First" title={'FirstScreen'} links={['Second']} />,
+  Second: <Screen key="Second" title={'SecondScreen'} links={['First', 'Third']} />,
+  Third: <Screen key="Third" title={'ThirdScreen'} links={['Second']} />,
+  Modal: <Modal key="Modal" title={'Modal'} />,
+  AnotherModal: <Modal key="AnotherModal" title={'Another Modal'} />
 }
 
-class ThirdScreen extends Component {
-  render() {
-    return (
-      <View style={styles.screen}>
-        <Text style={styles.title}>ThirdScreen</Text>
-        <TouchableHighlight onPress={() => go('Second')}>
-          <Text style={styles.description}>Go to SecondScreen</Text>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-}
-
-register(FirstScreen, 'First')
-register(SecondScreen, 'Second')
-register(ThirdScreen, 'Third')
+// Register screens.
+Object.keys(Screens).map(ScreenName =>
+  register(
+    Screens[ScreenName],
+    ScreenName.includes('Modal') ? 'modal' : undefined
+  )
+)
 
 export default Reactigation

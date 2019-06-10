@@ -4,6 +4,7 @@ module.exports = {
       targets: {
         node: true
       }
-    }]
+    }],
+    'module:metro-react-native-babel-preset'
   ]
 }
