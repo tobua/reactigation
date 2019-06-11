@@ -13,6 +13,7 @@ export default StyleSheet.create({
     width: '100%'
   },
   back: {
+    backgroundColor: 'white',
     flex: 1,
     position: 'absolute',
     top: 0,
@@ -23,7 +24,6 @@ export default StyleSheet.create({
     // Rendered, but somewhere outside the screen.
     flex: 1,
     position: 'absolute',
-    backgroundColor: 'green',
     top: -999,
     bottom: 0,
     width: '100%',

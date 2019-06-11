@@ -16,26 +16,26 @@ import React from 'react'
 import { View, Text, TouchableHighlight } from 'react-native'
 import Reactigation, { register, go, back } from 'reacigation'
 
-const FirstScreen = (
-  <View key="FirstScreen">
-    <Text>FirstScreen</Text>
+const FirstScreen = props => (
+  <View>
+    <Text>{props.title}</Text>
     <TouchableHighlight onPress={() => go('Second')}>
       <Text>go to SecondScreen</Text>
     </TouchableHighlight>
   </View>
 )
 
-const SecondScreen = (
-  <View key="SecondScreen">
-    <Text>FirstScreen</Text>
+const SecondScreen = props => (
+  <View>
+    <Text>{props.title}</Text>
     <TouchableHighlight onPress={() => back()}>
       <Text>go back</Text>
     </TouchableHighlight>
   </View>
 )
 
-register(FirstScreen)
-register(SecondScreen)
+register(<FirstScreen />, 'First')
+register(<SecondScreen />, 'Second')
 
 export default Reactigation
 ```

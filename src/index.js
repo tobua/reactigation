@@ -9,20 +9,21 @@ const screens = {}
 const history = []
 
 // Register a screen.
-export const register = (Component, transition = 'regular') => {
+export const register = (Component, name, transition = 'regular') => {
   const screen = {
     Component,
     transition,
-    name: Component.key
+    name
   }
-  if (!Component.key) {
-    return console.warn('Reactigation: Trying to register a Component without a key.')
+  if (!name) {
+    return console.error('Reactigation: Trying to register a Component without a name as the second argument.')
   }
   // First registered screen will initially be shown.
   if (!history.length) {
+    screen.first = true
     history.push(screen)
   }
-  screens[Component.key] = screen
+  screens[name] = screen
 }
 
 // Go to certain screen.
@@ -32,11 +33,14 @@ export const go = (name, transition) => {
     return console.warn(`Reactigation: Screen ${name} wasn't registered.`)
   }
   const lastScreen = history[history.length - 1]
-  history.push(currentScreen)
+  // Make a copy to reuse transition when going back.
+  const currentScreenCopy = Object.assign({}, currentScreen, { first: false })
+  currentScreenCopy.transition = transition || currentScreen.transition
+  history.push(currentScreenCopy)
   startTransition(
-    currentScreen.Component,
-    lastScreen.Component,
-    transition || currentScreen.transition
+    currentScreen,
+    lastScreen,
+    currentScreenCopy.transition
   )
 }
 
@@ -49,14 +53,22 @@ export const back = transition => {
   const currentScreen = history[history.length - 1]
 
   startTransition(
-    lastScreen.Component,
-    currentScreen.Component,
+    lastScreen,
+    currentScreen,
     transition || lastScreen.transition,
     true
   )
 }
 
 export const currentScreen = () => history[history.length - 1].name
+
+// Clear navigation state.
+export const destroy = () => {
+  history.length = 0
+  for (const key in screens) {
+    delete screens[key]
+  }
+}
 
 // Go back when the android back button gets pressed.
 BackHandler.addEventListener('hardwareBackPress', () => {
@@ -72,40 +84,63 @@ export default class Reactigation extends Component {
     connect(this.setState.bind(this))
     // Render only screens that have been shown at least once.
     history[0].rendered = true
-    this.state = initial(history[0].Component)
+    this.state = initial(history[0])
+  }
+
+  // Move Top screen to first position, so that it's always visible.
+  unshiftTop(screenKeys) {
+    const { Top, Bottom, reverse } = this.state
+    screenKeys.sort((x, y) => (x === Top.name ? 1 : y === Top.name ? -1 : 0))
+    console.log(screenKeys)
+    return screenKeys
   }
 
   // Renders the Bottom screen if available.
   renderBottom() {
-    const { Bottom } = this.state
+    const { Bottom, reverse } = this.state
 
     if (!Bottom) {
       return
     }
 
-    const BottomWithProps = cloneElement(Bottom, {
-      backPossible: history.length > 2
+    const BottomWithProps = cloneElement(Bottom.Component, {
+      backPossible: history.length > 1 && !Bottom.first,
+      title: Bottom.name
     })
 
     return (
-      <View key={Bottom.key} style={styles.back}>
+      <Animated.View key={Bottom.name} style={styles.back}>
         {BottomWithProps}
-      </View>
+      </Animated.View>
     )
   }
 
   // Renders the Top screen, which should always be available.
   // Movements are animated on the Top Component.
   renderTop() {
-    const { Top, left, top, reverse } = this.state
+    const { Top, left, top, opacity, reverse } = this.state
 
-    const TopWithProps = cloneElement(Top, {
-      backPossible: history.length > 1 || reverse
+    const TopWithProps = cloneElement(Top.Component, {
+      backPossible: history.length > 1 || !!reverse,
+      title: Top.name
     })
 
     return (
-      <Animated.View key={Top.key} style={[styles.front, { left, top }]}>
+      <Animated.View key={Top.name} style={[styles.front, { left, top, opacity }]}>
         {TopWithProps}
+      </Animated.View>
+    )
+  }
+
+  renderRegular(screen) {
+    const ScreenWithProps = cloneElement(screen.Component, {
+      backPossible: history.length > 2,
+      title: screen.name
+    })
+
+    return (
+      <Animated.View key={screen.name} style={[styles.other]}>
+        {ScreenWithProps}
       </Animated.View>
     )
   }
@@ -113,28 +148,23 @@ export default class Reactigation extends Component {
   renderScreen(screen) {
     const { Top, Bottom, left, top, reverse } = this.state
 
-    if (screen.name === Top.key) {
+    if (screen.name === Top.name) {
       return this.renderTop()
     }
 
-    if (Bottom && screen.name === Bottom.key) {
+    if (Bottom && screen.name === Bottom.name) {
       return this.renderBottom()
     }
 
-    return (
-      <Animated.View key={screen.name} style={[styles.other]}>
-        {screen.Component}
-      </Animated.View>
-    )
+    return this.renderRegular(screen)
   }
 
   renderScreens() {
-    const renderedScreens = Object.keys(screens).map(key => {
+    const orderedScreenKeys = this.unshiftTop(Object.keys(screens))
+    const renderedScreens = orderedScreenKeys.map(key => {
       const screen = screens[key]
       return this.renderScreen(screen)
     })
-
-    console.log(`Rendering ${renderedScreens.length} screens.`)
 
     return renderedScreens
   }

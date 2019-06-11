@@ -8,6 +8,7 @@ import {
   Platform
 } from 'react-native'
 import Reactigation, { register, go, back, currentScreen } from 'reactigation'
+import AnimatedLink from './AnimatedLink'
 
 // Shadow styles with iOS Compatibility (elevation).
 const shadow = () => ({
@@ -47,8 +48,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 5,
-    marginRight: 10,
+    padding: 3,
+    marginRight: 20,
     borderWidth: 2,
     borderColor: 'black'
   },
@@ -82,7 +83,6 @@ const styles = StyleSheet.create({
 class Screen extends Component {
   constructor(props) {
     super(props)
-    console.log(props.title, 'const')
   }
 
   renderTabs() {
@@ -90,7 +90,7 @@ class Screen extends Component {
     const current = currentScreen()
 
     return tabs.map(name => (
-      <TouchableOpacity key={name} onPress={() => go(name)}>
+      <TouchableOpacity key={name} onPress={() => go(name, 'none')}>
         <Text style={[
           styles.description, current === name ? { fontWeight: 'bold' } : undefined
         ]}>{name}</Text>
@@ -99,12 +99,15 @@ class Screen extends Component {
   }
 
   renderLinks() {
-    const { links } = this.props
+    const { links, showAnimations } = this.props
 
     return links.map(name => (
-      <TouchableHighlight key={name} onPress={() => go(name)}>
-        <Text style={styles.description}>Go to {name}Screen</Text>
-      </TouchableHighlight>
+      <AnimatedLink
+        key={name}
+        name={name}
+        textStyle={styles.description}
+        showAnimations={showAnimations}
+      />
     ))
   }
 
@@ -191,9 +194,9 @@ class Modal extends Component {
 
 // All possible screen components.
 const Screens = {
-  First: <Screen key="First" title={'FirstScreen'} links={['Second']} />,
+  First: <Screen key="First" title={'FirstScreen'} showAnimations links={['Second']} />,
   Second: <Screen key="Second" title={'SecondScreen'} links={['First', 'Third']} />,
-  Third: <Screen key="Third" title={'ThirdScreen'} links={['Second']} />,
+  Third: <Screen key="Third" title={'ThirdScreen'} showAnimations links={['Second']} />,
   Modal: <Modal key="Modal" title={'Modal'} />,
   AnotherModal: <Modal key="AnotherModal" title={'Another Modal'} />
 }
@@ -202,6 +205,7 @@ const Screens = {
 Object.keys(Screens).map(ScreenName =>
   register(
     Screens[ScreenName],
+    ScreenName,
     ScreenName.includes('Modal') ? 'modal' : undefined
   )
 )
