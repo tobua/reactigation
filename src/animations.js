@@ -3,98 +3,78 @@ import { Animated, Dimensions, Easing } from 'react-native'
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
-// Animations on left position.
-const leftValue = reverse => new Animated.Value(reverse ? 0 : width)
-const leftHandler = (reverse, duration = 500) => function() {
-  Animated.timing(
-    this.state.left,
-    {
-      toValue: reverse ? width : 0,
-      easing: Easing.ease,
-      duration
-    }
-  ).start()
+// Animation finish handler.
+const handlerLeft = (value, reverse, duration = 500) => () => {
+  Animated.timing(value, {
+    toValue: reverse ? width : 0,
+    easing: Easing.ease,
+    duration
+  }).start()
 }
 
-export const regular = (reverse = false) => ({
-  values: {
-    left: leftValue(reverse),
-    top: 0,
-    opacity: 1
-  },
-  handler: leftHandler(reverse)
-})
+export const regular = (state, reverse = false) => {
+  state.left.setValue(reverse ? 0 : width)
+  state.top.setValue(0)
+  state.opacity.setValue(1)
 
-export const slow = (reverse = false) => ({
-  values: {
-    left: leftValue(reverse),
-    top: 0,
-    opacity: 1
-  },
-  handler: leftHandler(reverse, 1000)
-})
-
-export const fast = (reverse = false) => ({
-  values: {
-    left: leftValue(reverse),
-    top: 0,
-    opacity: 1
-  },
-  handler: leftHandler(reverse, 250)
-})
-
-export const none = (reverse = false) => ({
-  values: {
-    left: reverse ? width : 0,
-    top: 0,
-    opacity: 1
-  }
-})
-
-// Animations on opacity.
-const opacityValue = reverse => new Animated.Value(reverse ? 1 : 0)
-const opacityHandler = (reverse, duration = 500) => function() {
-  this.setState({ left: 0 })
-  Animated.timing(
-    this.state.opacity,
-    {
-      toValue: reverse ? 0 : 1,
-      easing: Easing.ease,
-      duration
-    }
-  ).start(
-    // Hide screen after opacity animation done.
-    () => this.setState({ left: reverse ? width: 0 })
-  )
+  return handlerLeft(state.left, reverse)
 }
 
-export const opacity = (reverse = false) => ({
-  values: {
-    left: 0,
-    top: 0,
-    opacity: opacityValue(reverse)
-  },
-  handler: opacityHandler(reverse)
-})
+export const slow = (state, reverse = false) => {
+  state.left.setValue(reverse ? 0 : width)
+  state.top.setValue(0)
+  state.opacity.setValue(1)
 
-// Animations on top position.
-const topValue = reverse => new Animated.Value(reverse ? 0 : height)
-const topHandler = reverse => function() {
-  Animated.timing(
-    this.state.top,
-    {
-      toValue: reverse ? height : 0,
-      easing: Easing.ease,
-      duration: 500
-    }
-  ).start()
+  return handlerLeft(state.left, reverse, 1000)
 }
 
-export const modal = (reverse = false) => ({
-  values: {
-    left: 0,
-    top: topValue(reverse),
-    opacity: 1
-  },
-  handler: topHandler(reverse)
-})
+export const fast = (state, reverse = false) => {
+  state.left.setValue(reverse ? 0 : width)
+  state.top.setValue(0)
+  state.opacity.setValue(1)
+
+  return handlerLeft(state.left, reverse, 250)
+}
+
+export const none = (state, reverse = false) => {
+  state.left.setValue(reverse ? width : 0)
+  state.top.setValue(0)
+  state.opacity.setValue(1)
+
+  return null
+}
+
+const handlerOpacity = (value, reverse, done, duration = 500) => () => {
+  Animated.timing(value, {
+    toValue: reverse ? 0 : 1,
+    easing: Easing.ease,
+    duration
+  }).start(done)
+}
+
+export const opacity = (state, reverse = false) => {
+  state.left.setValue(0)
+  state.top.setValue(0)
+  state.opacity.setValue(reverse ? 1 : 0)
+
+  return handlerOpacity(state.opacity, reverse, () => {
+      // Hide screen after opacity animation done.
+      state.left.setValue(reverse ? width : 0)
+  })
+}
+
+const handlerTop = (value, reverse, duration = 500) => () => {
+  Animated.timing(value, {
+    toValue: reverse ? height : 0,
+    easing: Easing.ease,
+    duration
+  }).start()
+}
+
+export const modal = (state, reverse = false) => {
+  state.left.setValue(0)
+  state.top.setValue(reverse ? 0 : height)
+  state.opacity.setValue(1)
+
+  return handlerTop(state.top, reverse)
+}

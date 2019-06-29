@@ -81,9 +81,7 @@ export default class Reactigation extends Component {
   // Allow outside control of setState and set initial screen.
   constructor(props) {
     super(props)
-    connect(this.setState.bind(this))
-    // Render only screens that have been shown at least once.
-    history[0].rendered = true
+    connect(this)
     this.state = initial(history[0])
   }
 
@@ -91,7 +89,6 @@ export default class Reactigation extends Component {
   unshiftTop(screenKeys) {
     const { Top, Bottom, reverse } = this.state
     screenKeys.sort((x, y) => (x === Top.name ? 1 : y === Top.name ? -1 : 0))
-    console.log(screenKeys)
     return screenKeys
   }
 
