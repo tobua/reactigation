@@ -118,9 +118,12 @@ To develop the plugin further generate and run the example app. After that `npm 
 The idea for the plugin came after experiencing some issues with native dependencies for an existing React Native navigation plugin.
 
 <a href="https://github.com/kmagiera/react-native-gesture-handler/issues/494#issuecomment-471204581">
-<img src="https://raw.githubusercontent.com/naminho/reactigation/master/inspiration.png" alt="Inspiration Comment">
+  <img src="https://github.com/naminho/reactigation/raw/master/inspiration.png" alt="Inspiration Comment">
 </a>
 
+<br />
+<br />
+
 <p align="center">
-  <img src="https://raw.githubusercontent.com/naminho/reactigation/master/logo.png" alt="Reactigation">
+  <img src="https://github.com/naminho/reactigation/raw/master/logo.png" alt="Reactigation" width="250">
 </p>
