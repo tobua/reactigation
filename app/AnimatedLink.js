@@ -7,6 +7,9 @@ const animations = ['Regular', 'None', 'Slow', 'Fast', 'Opacity', 'Modal']
 const styles = StyleSheet.create({
   animations: {
     marginLeft: 20
+  },
+  text: {
+    color: 'black'
   }
 })
 
@@ -22,7 +25,7 @@ export default class AnimatedLink extends Component {
       <View style={styles.animations}>
         {animations.map(animation => (
           <TouchableHighlight key={animation} onPress={() => go(name, animation.toLowerCase())}>
-            <Text>{animation} Animation</Text>
+            <Text style={styles.text}>{animation} Animation</Text>
           </TouchableHighlight>
         ))}
       </View>

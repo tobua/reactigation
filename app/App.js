@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   TouchableHighlight,
-  Platform
+  Platform,
+  StatusBar
 } from 'react-native'
 import Reactigation, { register, go, back, currentScreen } from 'reactigation'
 import AnimatedLink from './AnimatedLink'
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     paddingLeft: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
     ...shadow()
@@ -43,12 +44,18 @@ const styles = StyleSheet.create({
     paddingLeft: 20
   },
   backTouchable: {
+    position: 'absolute',
     flex: 1,
+    left: 20,
+    top: Platform.OS === 'ios' ? 46 : 16,
     backgroundColor: 'black',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 3,
+    paddingTop: 8,
+    paddingRight: 20,
+    paddingBottom: 8,
+    paddingLeft: 20,
     marginRight: 20,
     borderWidth: 2,
     borderColor: 'black'
@@ -60,13 +67,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    fontWeight: 'bold'
-  },
-  headerPlaceholder: {
-    flex: 1
+    fontWeight: 'bold',
+    color: 'black'
   },
   description: {
-    fontSize: 25
+    fontSize: 25,
+    color: 'black'
   },
   tabs: {
     backgroundColor: 'white',
@@ -133,7 +139,6 @@ class Screen extends Component {
         <View style={styles.header}>
           {this.renderBack()}
           <Text style={styles.title}>{title}</Text>
-          <View style={styles.headerPlaceholder} />
         </View>
         <View style={styles.body}>
           {this.renderLinks()}
@@ -180,6 +185,7 @@ class Modal extends Component {
 
     return (
       <View style={stylesModal.modal}>
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <TouchableHighlight underlayColor="white" style={stylesModal.closeTouchable} onPress={() => back()}>
           <Text style={stylesModal.close}>Close</Text>
         </TouchableHighlight>
