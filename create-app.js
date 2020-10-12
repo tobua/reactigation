@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 
 import { join } from 'path'
-import { promisify } from 'util'
-import { exec } from 'child_process'
+import { execSync } from 'child_process'
 import copy from 'recursive-copy'
 import rimraf from 'rimraf'
 
 // Enhances source files inside /app with a fresh RN project template.
 (async () => {
   const appName = 'NavigationApp'
-  const execute = promisify(exec)
 
   console.log('Initializing a fresh RN project...')
 
@@ -17,12 +15,14 @@ import rimraf from 'rimraf'
   rimraf.sync('node_modules/@react-native-community/cli')
 
   // Initialize RN project.
-  await execute(`react-native init ${appName}`, {
-    cwd: 'app'
+  execSync(`react-native init ${appName}`, {
+    cwd: 'app',
+    // Write output to console.
+    stdio: 'inherit'
   })
 
   // Copy to destination directory, leaving source files untouched.
-  const results = await copy(`app/${appName}`, 'app', {
+  await copy(`app/${appName}`, 'app', {
     dot: true,
     overwrite: false,
     filter: ['**/*', '!App.js']
@@ -32,8 +32,9 @@ import rimraf from 'rimraf'
   rimraf.sync(`app/${appName}`)
 
   // Install this package locally, avoiding symlinks.
-  await execute('npm install $(npm pack .. | tail -1)', {
-    cwd: join(__dirname, 'app')
+  execSync('npm install $(npm pack .. | tail -1)', {
+    cwd: join(__dirname, 'app'),
+    stdio: 'inherit'
   })
 
   // TODO add to scripts: https://www.npmjs.com/package/edit-json-file

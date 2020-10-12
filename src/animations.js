@@ -8,6 +8,7 @@ const handlerLeft = (value, reverse, duration = 500) => () => {
   Animated.timing(value, {
     toValue: reverse ? width : 0,
     easing: Easing.ease,
+    useNativeDriver: false,
     duration
   }).start()
 }
@@ -48,6 +49,7 @@ const handlerOpacity = (value, reverse, done, duration = 500) => () => {
   Animated.timing(value, {
     toValue: reverse ? 0 : 1,
     easing: Easing.ease,
+    useNativeDriver: false,
     duration
   }).start(done)
 }
@@ -67,6 +69,7 @@ const handlerTop = (value, reverse, duration = 500) => () => {
   Animated.timing(value, {
     toValue: reverse ? height : 0,
     easing: Easing.ease,
+    useNativeDriver: false,
     duration
   }).start()
 }
