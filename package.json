@@ -3,7 +3,7 @@
   "description": "React-only Navigation for React Native.",
   "version": "1.0.2",
   "author": "Matthias Giger",
-  "repository": "github:naminho/reactigation",
+  "repository": "github:tobua/reactigation",
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
