@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/naminho/reactigation/raw/master/video.gif" alt="Reactigation" width="250">
+  <img src="https://github.com/tobua/reactigation/raw/master/video.gif" alt="Reactigation" width="250">
 </p>
 
 # Reactigation
@@ -22,7 +22,7 @@ import React from 'react'
 import { View, Text, TouchableHighlight } from 'react-native'
 import Reactigation, { register, go, back } from 'reacigation'
 
-const FirstScreen = props => (
+const FirstScreen = (props) => (
   <View>
     <Text>{props.title}</Text>
     <TouchableHighlight onPress={() => go('Second')}>
@@ -31,7 +31,7 @@ const FirstScreen = props => (
   </View>
 )
 
-const SecondScreen = props => (
+const SecondScreen = (props) => (
   <View>
     <Text>{props.title}</Text>
     <TouchableHighlight onPress={() => back()}>

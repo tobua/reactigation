@@ -5,27 +5,34 @@
   "author": "Matthias Giger",
   "repository": "github:tobua/reactigation",
   "main": "src/index.js",
+  "type": "module",
   "license": "MIT",
   "scripts": {
     "test": "jest --watchAll",
     "watch": "cpx 'src/**/*' app/node_modules/reactigation/src --watch",
-    "app": "babel-node create-app"
+    "app": "node create-app.js"
   },
   "files": [
     "src"
   ],
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@babel/node": "^7.12.6",
-    "@babel/preset-env": "^7.12.7",
+    "@babel/core": "^7.12.17",
+    "@babel/preset-env": "^7.12.17",
     "babel-jest": "^26.6.3",
     "cpx": "^1.5.0",
     "jest": "^26.6.3",
-    "metro-react-native-babel-preset": "^0.64.0",
+    "metro-react-native-babel-preset": "^0.65.1",
     "react": "^17.0.1",
     "react-native": "^0.63.4",
     "react-test-renderer": "^17.0.1",
     "recursive-copy": "^2.0.11",
     "rimraf": "^3.0.2"
+  },
+  "engines": {
+    "node": ">= 14"
   }
 }
