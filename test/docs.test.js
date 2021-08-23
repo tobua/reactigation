@@ -1,5 +1,6 @@
 import React from 'react'
 import { View, Text, TouchableHighlight } from 'react-native'
+import { act } from 'react-test-renderer'
 import Navigation, { register, go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 
@@ -9,7 +10,7 @@ Date.now = jest.fn(() => 1503187200000)
 
 test('Two Screen Example with Interaction.', () => {
   const firstScreenMock = jest.fn()
-  const FirstScreen = props => {
+  const FirstScreen = (props) => {
     firstScreenMock(props)
     return (
       <View>
@@ -22,7 +23,7 @@ test('Two Screen Example with Interaction.', () => {
   }
 
   const secondScreenMock = jest.fn()
-  const SecondScreen = props => {
+  const SecondScreen = (props) => {
     secondScreenMock(props)
     return (
       <View>
@@ -37,7 +38,7 @@ test('Two Screen Example with Interaction.', () => {
   register(<FirstScreen />, 'First')
   register(<SecondScreen />, 'Second')
 
-  const { screens, wrappers } = render(<Navigation />)
+  const { screens } = render(<Navigation />)
 
   expect(screens.length).toEqual(2)
 
@@ -50,7 +51,9 @@ test('Two Screen Example with Interaction.', () => {
   expect(firstScreenMock.mock.calls[0][0].backPossible).toEqual(false)
   expect(secondScreenMock.mock.calls[0][0].backPossible).toEqual(false)
 
-  go('Second')
+  act(() => {
+    go('Second')
+  })
 
   expect(firstScreenMock.mock.calls.length).toEqual(2)
   expect(secondScreenMock.mock.calls.length).toEqual(2)

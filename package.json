@@ -1,36 +1,58 @@
 {
   "name": "reactigation",
   "description": "React-only Navigation for React Native.",
-  "version": "1.0.2",
-  "author": "Matthias Giger",
+  "version": "1.1.0",
   "repository": "github:tobua/reactigation",
-  "main": "src/index.js",
-  "type": "module",
   "license": "MIT",
+  "author": "Matthias Giger",
   "scripts": {
-    "test": "jest --watchAll",
+    "app": "node create-app.js",
     "watch": "cpx 'src/**/*' app/node_modules/reactigation/src --watch",
-    "app": "node create-app.js"
+    "test": "jest"
   },
+  "type": "module",
+  "main": "src/index.js",
   "files": [
     "src"
   ],
+  "keywords": [
+    "react-native",
+    "navigation",
+    "animation"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@react-native-community/eslint-config": "^3.0.0",
+    "babel-jest": "^27.0.6",
+    "cpx": "^1.5.0",
+    "eslint": "^7.32.0",
+    "jest": "^27.0.6",
+    "metro-react-native-babel-preset": "^0.66.2",
+    "prettier": "^2.3.2",
+    "react": "^17.0.2",
+    "react-native": "^0.65.1",
+    "react-test-renderer": "^17.0.2",
+    "recursive-copy": "^2.0.13",
+    "rimraf": "^3.0.2"
+  },
   "prettier": {
     "semi": false,
     "singleQuote": true
   },
-  "devDependencies": {
-    "@babel/core": "^7.12.17",
-    "@babel/preset-env": "^7.12.17",
-    "babel-jest": "^26.6.3",
-    "cpx": "^1.5.0",
-    "jest": "^26.6.3",
-    "metro-react-native-babel-preset": "^0.65.1",
-    "react": "^17.0.1",
-    "react-native": "^0.63.4",
-    "react-test-renderer": "^17.0.1",
-    "recursive-copy": "^2.0.11",
-    "rimraf": "^3.0.2"
+  "eslintConfig": {
+    "extends": "@react-native-community",
+    "rules": {
+      "semi": 0
+    }
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "reactigation": "<rootDir>/src"
+    },
+    "preset": "react-native",
+    "testPathIgnorePatterns": [
+      "/app/"
+    ]
   },
   "engines": {
     "node": ">= 14"

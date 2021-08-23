@@ -1,5 +1,6 @@
 import React from 'react'
-import Navigation, { go, back, destroy } from 'reactigation'
+import { act } from 'react-test-renderer'
+import Navigation, { go, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 
@@ -20,7 +21,7 @@ test('Renders a single registered screen.', () => {
 
   expect(input[0].mock.calls[0][0]).toEqual({
     backPossible: false,
-    title: names[0]
+    title: names[0],
   })
 
   // <Text> with title.
@@ -38,7 +39,8 @@ test('Can render several screens.', () => {
   expect(screens.length).toEqual(3)
 
   names.forEach((name, index) => {
-    expect(input[index].constructorMock.calls.length).toEqual(1)
+    // Effect only called if JSX Element rendered to screen, not just rendered.
+    expect(input[0].effectMock.calls.length).toEqual(0)
     expect(input[index].mock.calls.length).toEqual(1)
     expect(input[index].mock.calls[0][1]).toEqual(name)
   })
@@ -50,25 +52,27 @@ test('Can navigate between screens.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  names.forEach((name, index) => {
+    expect(input[index].mock.calls.length).toEqual(0)
+    expect(input[index].effectMock.calls.length).toEqual(0)
+  })
+
+  act(() => {
+    go(names[1])
+  })
 
   names.forEach((name, index) => {
     expect(input[index].mock.calls.length).toEqual(1)
-    expect(input[index].constructorMock.calls.length).toEqual(1)
+    expect(input[index].effectMock.calls.length).toEqual(1)
   })
 
-  go(names[1])
+  act(() => {
+    go(names[2])
+  })
 
   names.forEach((name, index) => {
     expect(input[index].mock.calls.length).toEqual(2)
-    expect(input[index].constructorMock.calls.length).toEqual(1)
-  })
-
-  go(names[2])
-
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(3)
-    expect(input[index].constructorMock.calls.length).toEqual(1)
+    expect(input[index].effectMock.calls.length).toEqual(1)
   })
 
   destroy()

@@ -4,14 +4,16 @@ const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 // Animation finish handler.
-const handlerLeft = (value, reverse, duration = 500) => () => {
-  Animated.timing(value, {
-    toValue: reverse ? width : 0,
-    easing: Easing.ease,
-    useNativeDriver: false,
-    duration
-  }).start()
-}
+const handlerLeft =
+  (value, reverse, duration = 500) =>
+  () => {
+    Animated.timing(value, {
+      toValue: reverse ? width : 0,
+      easing: Easing.ease,
+      useNativeDriver: false,
+      duration,
+    }).start()
+  }
 
 export const regular = (state, reverse = false) => {
   state.left.setValue(reverse ? 0 : width)
@@ -45,14 +47,16 @@ export const none = (state, reverse = false) => {
   return null
 }
 
-const handlerOpacity = (value, reverse, done, duration = 500) => () => {
-  Animated.timing(value, {
-    toValue: reverse ? 0 : 1,
-    easing: Easing.ease,
-    useNativeDriver: false,
-    duration
-  }).start(done)
-}
+const handlerOpacity =
+  (value, reverse, done, duration = 500) =>
+  () => {
+    Animated.timing(value, {
+      toValue: reverse ? 0 : 1,
+      easing: Easing.ease,
+      useNativeDriver: false,
+      duration,
+    }).start(done)
+  }
 
 export const opacity = (state, reverse = false) => {
   state.left.setValue(0)
@@ -60,19 +64,21 @@ export const opacity = (state, reverse = false) => {
   state.opacity.setValue(reverse ? 1 : 0)
 
   return handlerOpacity(state.opacity, reverse, () => {
-      // Hide screen after opacity animation done.
-      state.left.setValue(reverse ? width : 0)
+    // Hide screen after opacity animation done.
+    state.left.setValue(reverse ? width : 0)
   })
 }
 
-const handlerTop = (value, reverse, duration = 500) => () => {
-  Animated.timing(value, {
-    toValue: reverse ? height : 0,
-    easing: Easing.ease,
-    useNativeDriver: false,
-    duration
-  }).start()
-}
+const handlerTop =
+  (value, reverse, duration = 500) =>
+  () => {
+    Animated.timing(value, {
+      toValue: reverse ? height : 0,
+      easing: Easing.ease,
+      useNativeDriver: false,
+      duration,
+    }).start()
+  }
 
 export const modal = (state, reverse = false) => {
   state.left.setValue(0)

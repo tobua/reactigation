@@ -1,25 +1,22 @@
-import React, { Component } from 'react'
+/* eslint-env jest */
+import React, { useEffect } from 'react'
 import { View, Text } from 'react-native'
 
 // Creates a screen with a render mock.
-export default (name, renderMock = jest.fn(), constructorMock = jest.fn()) => {
-  class Screen extends Component {
-    constructor(props) {
-      super(props)
-      constructorMock(props)
-    }
+export default (name, renderMock = jest.fn(), effectMock = jest.fn()) => {
+  const Screen = (props) => {
+    useEffect(() => {
+      effectMock(props)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    render() {
-      const { title } = this.props;
+    renderMock(props, name)
 
-      renderMock(this.props, name)
-
-      return (
-        <View>
-          <Text>{title}</Text>
-        </View>
-      )
-    }
+    return (
+      <View>
+        <Text>{props.title}</Text>
+      </View>
+    )
   }
 
   return <Screen />

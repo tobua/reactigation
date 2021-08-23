@@ -1,7 +1,7 @@
+/* eslint-env jest */
 import renderer from 'react-test-renderer'
-import Reactigation from 'reactigation'
 
-export default Navigation => {
+export default (Navigation) => {
   const rendered = renderer.create(Navigation)
   const tree = rendered.toJSON()
 
@@ -11,6 +11,6 @@ export default Navigation => {
   return {
     wrapper: tree,
     wrappers: tree.children,
-    screens: tree.children.map(wrapper => wrapper.children[0])
+    screens: tree.children.map((wrapper) => wrapper.children[0]),
   }
 }

@@ -1,18 +1,19 @@
+/* eslint-env jest */
 import { register } from 'reactigation'
 import createTestScreen from './../components/Screen'
 
-export default names => {
-  return names.map(name => {
+export default (names) => {
+  return names.map((name) => {
     const mock = jest.fn()
-    const constructorMock = jest.fn()
-    const component = createTestScreen(name, mock, constructorMock)
+    const effectMock = jest.fn()
+    const component = createTestScreen(name, mock, effectMock)
 
     register(component, name)
 
     return {
       mock: mock.mock,
-      constructorMock: constructorMock.mock,
-      component
+      effectMock: effectMock.mock,
+      component,
     }
   })
 }
