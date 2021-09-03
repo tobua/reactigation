@@ -1,7 +1,7 @@
 {
   "name": "reactigation",
   "description": "React-only Navigation for React Native.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "repository": "github:tobua/reactigation",
   "license": "MIT",
   "author": "Matthias Giger",
