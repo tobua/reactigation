@@ -39,8 +39,7 @@ test('Can render several screens.', () => {
   expect(screens.length).toEqual(3)
 
   names.forEach((name, index) => {
-    // Effect only called if JSX Element rendered to screen, not just rendered.
-    expect(input[0].effectMock.calls.length).toEqual(0)
+    expect(input[0].effectMock.calls.length).toEqual(1)
     expect(input[index].mock.calls.length).toEqual(1)
     expect(input[index].mock.calls[0][1]).toEqual(name)
   })

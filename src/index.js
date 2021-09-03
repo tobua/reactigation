@@ -8,6 +8,21 @@ const screens = {}
 // History of the screens visited.
 const history = []
 
+// React hook: const screen = useCurrentScreen()
+const currentScreenHookListeners = []
+const updateCurrentScreenHookListeners = (screen) =>
+  currentScreenHookListeners.forEach((listener) => listener(screen))
+
+export const useCurrentScreen = () => {
+  const [currentScreen, setCurrentScreen] = useState(history[0].name)
+
+  useEffect(() => {
+    currentScreenHookListeners.push(setCurrentScreen)
+  }, [])
+
+  return currentScreen
+}
+
 // Register a screen.
 export const register = (Component, name, transition = 'regular') => {
   const screen = {
@@ -40,6 +55,7 @@ export const go = (name, transition) => {
   currentScreenCopy.transition = transition || currentScreen.transition
   history.push(currentScreenCopy)
   startTransition(currentScreen, lastScreen, currentScreenCopy.transition)
+  updateCurrentScreenHookListeners(name)
 }
 
 // Go back to previous screen.
@@ -56,6 +72,7 @@ export const back = (transition) => {
     transition || lastScreen.transition,
     true
   )
+  updateCurrentScreenHookListeners(currentScreen.name)
 }
 
 export const currentScreen = () => history[history.length - 1].name

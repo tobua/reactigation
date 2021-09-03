@@ -98,6 +98,24 @@ import { back } from 'reactigation'
 back()
 ```
 
+### Accessing the Current Screen
+
+To conditionally render elements based on the current screen use the following React hook that will rerender the component with the new `currentScreen` each time a navigation occurs.
+
+```jsx
+import { useCurrentScreen } from 'reactigation'
+
+export const Footer = () => {
+  const currentScreen = useCurrentScreen()
+
+  if (currentScreen !== 'Overview') {
+    return null
+  }
+
+  ...
+}
+```
+
 ## Running the Example App
 
 The example app shown on top is found in the repository. Run it by cloning this repository and then executing the following commands inside the main directory.
