@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { go } from 'reactigation'
 
 const animations = ['Regular', 'None', 'Slow', 'Fast', 'Opacity', 'Modal']
@@ -7,21 +7,27 @@ const animations = ['Regular', 'None', 'Slow', 'Fast', 'Opacity', 'Modal']
 const styles = StyleSheet.create({
   animations: {
     marginLeft: 20,
+    marginBottom: 10,
   },
   text: {
     color: 'black',
+  },
+  hasAnimations: {
+    marginBottom: 5,
   },
 })
 
 const renderLink = ({ name, textStyle, showAnimations }) => {
   if (showAnimations) {
-    return <Text style={textStyle}>Go to {name}Screen</Text>
+    return (
+      <Text style={[textStyle, styles.hasAnimations]}>Go to {name}Screen</Text>
+    )
   }
 
   return (
-    <TouchableHighlight key={name} onPress={() => go(name)}>
+    <TouchableOpacity key={name} onPress={() => go(name)}>
       <Text style={textStyle}>Go to {name}Screen</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 
@@ -31,12 +37,12 @@ export const AnimatedLink = (props) => (
     {props.showAnimations && (
       <View style={styles.animations}>
         {animations.map((animation) => (
-          <TouchableHighlight
+          <TouchableOpacity
             key={animation}
             onPress={() => go(props.name, animation.toLowerCase())}
           >
             <Text style={styles.text}>{animation} Animation</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         ))}
       </View>
     )}

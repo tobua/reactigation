@@ -1,15 +1,17 @@
 import React from 'react'
 import {
+  AppRegistry,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  TouchableHighlight,
   Platform,
   StatusBar,
 } from 'react-native'
-import Reactigation, { register, go, back, currentScreen } from 'reactigation'
-import { AnimatedLink } from './AnimatedLink'
+import Reactigation, { register, go, back } from 'reactigation'
+import { name as appName } from './app.json'
+import { AnimatedLink } from './component/AnimatedLink'
+import { Static } from './component/Static'
 
 // Shadow styles with iOS Compatibility (elevation).
 const shadow = () => ({
@@ -74,17 +76,6 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: 'black',
   },
-  tabs: {
-    backgroundColor: 'white',
-    ...shadow(),
-    paddingTop: 20,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
-    paddingRight: 20,
-    paddingLeft: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  bold: { fontWeight: 'bold' },
 })
 
 const Screen = ({ name, title, links, showAnimations, backPossible }) => (
@@ -93,13 +84,13 @@ const Screen = ({ name, title, links, showAnimations, backPossible }) => (
       {!backPossible ? (
         <View style={styles.headerPlaceholder} />
       ) : (
-        <TouchableHighlight
+        <TouchableOpacity
           underlayColor="white"
           style={styles.backTouchable}
           onPress={() => back()}
         >
           <Text style={styles.back}>Back</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       )}
       <Text style={styles.title}>{title}</Text>
     </View>
@@ -112,26 +103,9 @@ const Screen = ({ name, title, links, showAnimations, backPossible }) => (
           showAnimations={showAnimations}
         />
       ))}
-      <TouchableHighlight onPress={() => go('Modal')}>
+      <TouchableOpacity onPress={() => go('Modal')}>
         <Text style={styles.description}>Open Modal</Text>
-      </TouchableHighlight>
-    </View>
-    <View style={styles.tabs}>
-      {['First', 'Second', 'Third'].map((screenName) => (
-        <TouchableOpacity
-          key={screenName}
-          onPress={() => go(screenName, 'none')}
-        >
-          <Text
-            style={[
-              styles.description,
-              currentScreen() === screenName ? styles.bold : undefined,
-            ]}
-          >
-            {screenName}
-          </Text>
-        </TouchableOpacity>
-      ))}
+      </TouchableOpacity>
     </View>
   </View>
 )
@@ -164,17 +138,17 @@ const stylesModal = StyleSheet.create({
 const Modal = ({ title }) => (
   <View style={stylesModal.modal}>
     <StatusBar backgroundColor="white" barStyle="dark-content" />
-    <TouchableHighlight
+    <TouchableOpacity
       underlayColor="white"
       style={stylesModal.closeTouchable}
       onPress={() => back()}
     >
       <Text style={stylesModal.close}>Close</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
     <Text style={styles.title}>{title}</Text>
-    <TouchableHighlight onPress={() => go('AnotherModal')}>
+    <TouchableOpacity onPress={() => go('AnotherModal')}>
       <Text style={styles.description}>Open Another Modal</Text>
-    </TouchableHighlight>
+    </TouchableOpacity>
   </View>
 )
 
@@ -212,4 +186,11 @@ Object.keys(Screens).map((ScreenName) =>
   )
 )
 
-export default Reactigation
+const App = () => (
+  <>
+    <Reactigation />
+    <Static />
+  </>
+)
+
+AppRegistry.registerComponent(appName, () => App)

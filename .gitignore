@@ -2,5 +2,6 @@ node_modules
 package-lock.json
 NavigationApp
 app/**/*
-!app/App.js
-!app/AnimatedLink.js
+!app/index.js
+!app/component
+!app/component/*
