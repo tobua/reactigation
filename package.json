@@ -8,7 +8,8 @@
   "scripts": {
     "app": "node create-app.js",
     "watch": "cpx 'src/**/*' app/node_modules/reactigation/src --watch",
-    "test": "jest"
+    "test": "jest",
+    "release": "npx standard-version"
   },
   "type": "module",
   "main": "src/index.js",
@@ -21,7 +22,7 @@
     "animation"
   ],
   "devDependencies": {
-    "@babel/core": "^7.15.4",
+    "@babel/core": "^7.15.5",
     "@react-native-community/eslint-config": "^3.0.1",
     "babel-jest": "^27.1.0",
     "cpx": "^1.5.0",

@@ -14,17 +14,16 @@ npm i reactigation
 
 ## Usage
 
-A minimal setup with two screen might look like this
+A minimal setup with two screens looks like this
 
 ```jsx
-// File: App.js
 import React from 'react'
-import { View, Text, TouchableHighlight } from 'react-native'
-import Reactigation, { register, go, back } from 'reacigation'
+import { AppRegistry, View, Text, TouchableHighlight } from 'react-native'
+import Reactigation, { register, go, back } from 'reactigation'
 
 const FirstScreen = (props) => (
-  <View>
-    <Text>{props.title}</Text>
+  <View style={{ margin: 50 }}>
+    <Text>{props.title} Screen</Text>
     <TouchableHighlight onPress={() => go('Second')}>
       <Text>go to SecondScreen</Text>
     </TouchableHighlight>
@@ -32,8 +31,8 @@ const FirstScreen = (props) => (
 )
 
 const SecondScreen = (props) => (
-  <View>
-    <Text>{props.title}</Text>
+  <View style={{ margin: 50 }}>
+    <Text>{props.title} Screen</Text>
     <TouchableHighlight onPress={() => back()}>
       <Text>go back</Text>
     </TouchableHighlight>
@@ -43,22 +42,38 @@ const SecondScreen = (props) => (
 register(<FirstScreen />, 'First')
 register(<SecondScreen />, 'Second')
 
-export default Reactigation
+AppRegistry.registerComponent('NavigationApp', () => Reactigation)
 ```
 
-## Interface
+## Navigating to a Screen
 
-`<Reactigation />`
+At runtime it's possible to navigate to any of the registered screens. A transition is how the switch between two screens looks like. For each navigation the transition can be configured.
 
-This is the main view exported by the plugin and should be directly passed to the React Native `AppRegistry`.
+`go(screen: string, transition?: string)`
 
+```jsx
+import { go } from 'reactigation'
+
+go('HelloWorld', 'modal')
 ```
-AppRegistry.registerComponent('app', () => Reactigation)
+
+Available transitions: `regular`, `slow`, `fast`, `none`, `opacity` & `modal`
+
+## Going Back
+
+Returning to the previous screen is simple. The animation defined by `go` will be applied in reverse. On Android when the user clicks the system back button this function is also called.
+
+`back()`
+
+```jsx
+import { back } from 'reactigation'
+
+back()
 ```
 
-### Registering Screens
+## Registering Screens
 
-At least one screen needs to be registered before `Reactigation` is initialized. The `register` function takes any React Component (preferably resembling a screen) and a title for the screen which is required. Optionally the default transition for this screen can be set during registration.
+At least one screen needs to be registered before `Reactigation` is initialized. The `register` function takes any React Component (preferably resembling a screen) and a title for the screen which is required. Optionally the default transition for this screen can be set during registration. It is also the possible to register screens after `Reactigation` was rendered.
 
 `register(Component: React.ReactNode, title: string, transition?: string)`
 
@@ -74,31 +89,7 @@ const screen = () => (
 register(screen, 'HelloWorld')
 ```
 
-### Navigating to a Screen
-
-At runtime it's possible to navigate to any of the registered screens (there is also the possibility to register screens after `Reactigation` was instantiated). For each navigation the transition can be configured.
-
-`go(screen: string, transition?: string)`
-
-```jsx
-import { go } from 'reactigation'
-
-go('HelloWorld', 'modal')
-```
-
-### Going Back
-
-Returning to the previous screen is simple. The animation defined by `go` will be applied in reverse. On Android when the user clicks the system back button this function is also called.
-
-`back()`
-
-```jsx
-import { back } from 'reactigation'
-
-back()
-```
-
-### Accessing the Current Screen
+## Accessing the Current Screen
 
 To conditionally render elements based on the current screen use the following React hook that will rerender the component with the new `currentScreen` each time a navigation occurs.
 
@@ -115,6 +106,25 @@ export const Footer = () => {
   ...
 }
 ```
+
+If you don't need a rerender to be triggered use the variable `import { currentScreen } from 'reactigation'`.
+
+## Static Parts
+
+In order for some components to always be rendered simply add another view next to the navigation.
+
+```jsx
+export default () => (
+  <>
+    <Reactigation />
+    <View style={styles.tabs}>
+      {...}
+    </View>
+  </>
+)
+```
+
+When you need to wrap `<Reactigation />` in a view make sure to add `<View style={{ flex: 1 }}>` in order for the navigation to be visible.
 
 ## Running the Example App
 
