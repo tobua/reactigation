@@ -179,11 +179,10 @@ const Screens = {
 
 // Register screens.
 Object.keys(Screens).map((ScreenName) =>
-  register(
-    Screens[ScreenName],
-    ScreenName,
-    ScreenName.includes('Modal') ? 'modal' : undefined
-  )
+  register(Screens[ScreenName], ScreenName, {
+    transition: ScreenName.includes('Modal') ? 'modal' : undefined,
+    background: ScreenName === 'Second' ? 'lightgray' : 'white',
+  })
 )
 
 const App = () => (

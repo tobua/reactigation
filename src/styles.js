@@ -5,7 +5,6 @@ export default StyleSheet.create({
     flex: 1,
   },
   front: {
-    backgroundColor: 'white',
     flex: 1,
     position: 'absolute',
     top: 0,
@@ -13,7 +12,6 @@ export default StyleSheet.create({
     width: '100%',
   },
   back: {
-    backgroundColor: 'white',
     flex: 1,
     position: 'absolute',
     top: 0,

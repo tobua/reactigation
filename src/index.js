@@ -24,10 +24,18 @@ export const useCurrentScreen = () => {
 }
 
 // Register a screen.
-export const register = (Component, name, transition = 'regular') => {
+export const register = (
+  Component,
+  name,
+  { transition, background } = {
+    transition: 'regular',
+    background: 'white',
+  }
+) => {
   const screen = {
     Component,
     transition,
+    background,
     name,
   }
   if (!name) {
@@ -113,7 +121,10 @@ const renderScreen = (screen, state) => {
     return (
       <Animated.View
         key={Top.name}
-        style={[styles.front, { left, top, opacity }]}
+        style={[
+          styles.front,
+          { left, top, opacity, backgroundColor: Top.background },
+        ]}
       >
         {TopWithProps}
       </Animated.View>
@@ -132,7 +143,10 @@ const renderScreen = (screen, state) => {
     })
 
     return (
-      <Animated.View key={Bottom.name} style={styles.back}>
+      <Animated.View
+        key={Bottom.name}
+        style={[styles.back, { backgroundColor: Bottom.background }]}
+      >
         {BottomWithProps}
       </Animated.View>
     )

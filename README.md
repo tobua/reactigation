@@ -14,7 +14,7 @@ npm i reactigation
 
 ## Usage
 
-A minimal setup with two screens looks like this
+A minimal setup with two screens looks like this.
 
 ```jsx
 import React from 'react'
@@ -75,7 +75,7 @@ back()
 
 At least one screen needs to be registered before `Reactigation` is initialized. The `register` function takes any React Component (preferably resembling a screen) and a title for the screen which is required. Optionally the default transition for this screen can be set during registration. It is also the possible to register screens after `Reactigation` was rendered.
 
-`register(Component: React.ReactNode, title: string, transition?: string)`
+`register(Component: React.ReactNode, title: string, { transition?: string, background?: string })`
 
 ```jsx
 import { register } from 'reactigation'
@@ -87,6 +87,10 @@ const screen = () => (
 )
 
 register(screen, 'HelloWorld')
+register(screen, 'HelloModal', {
+  transition: 'modal',
+  background: 'transparent',
+})
 ```
 
 ## Accessing the Current Screen
