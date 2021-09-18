@@ -45,24 +45,25 @@ export const register = (
   }
   // First registered screen will initially be shown.
   if (!history.length) {
-    screen.first = true
     history.push(screen)
   }
   screens[name] = screen
 }
 
 // Go to certain screen.
-export const go = (name, transition) => {
+export const go = (name: string, transition?: string, props?: object) => {
   const currentScreen = screens[name]
   if (!currentScreen) {
     return console.warn(`Reactigation: Screen ${name} wasn't registered.`)
   }
-  const lastScreen = history[history.length - 1]
+  const previousScreen = history[history.length - 1]
   // Make a copy to reuse transition when going back.
-  const currentScreenCopy = Object.assign({}, currentScreen, { first: false })
-  currentScreenCopy.transition = transition || currentScreen.transition
-  history.push(currentScreenCopy)
-  startTransition(currentScreen, lastScreen, currentScreenCopy.transition)
+  const nextScreen = Object.assign({}, currentScreen, {
+    transition: transition || currentScreen.transition,
+    props,
+  })
+  history.push(nextScreen)
+  startTransition(nextScreen, previousScreen, nextScreen.transition)
   updateCurrentScreenHookListeners(name)
 }
 
@@ -116,6 +117,7 @@ const renderScreen = (screen, state) => {
     const TopWithProps = cloneElement(Top.Component, {
       backPossible: history.length > 1 || !!reverse,
       title: Top.name,
+      ...Top.props,
     })
 
     return (
@@ -138,8 +140,9 @@ const renderScreen = (screen, state) => {
     }
 
     const BottomWithProps = cloneElement(Bottom.Component, {
-      backPossible: history.length > 1 && !Bottom.first,
+      backPossible: history.length > 1 && Bottom !== history[0],
       title: Bottom.name,
+      ...Bottom.props,
     })
 
     return (
@@ -172,9 +175,7 @@ export default ({}) => {
   const [state, setState] = useState(initial(history[0]))
   connect({ setState, state, setStateEnd })
 
-  useEffect(() => {
-    setStateEnd.handler()
-  }, [state])
+  useEffect(() => setStateEnd.handler(), [state])
 
   const orderedScreenKeys = unshiftTop(Object.keys(screens), state)
   const renderedScreens = orderedScreenKeys.map((key) => {

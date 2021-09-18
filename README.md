@@ -49,12 +49,14 @@ AppRegistry.registerComponent('NavigationApp', () => Reactigation)
 
 At runtime it's possible to navigate to any of the registered screens. A transition is how the switch between two screens looks like. For each navigation the transition can be configured.
 
-`go(screen: string, transition?: string)`
+`go(screen: string, transition?: string, props?: object)`
 
 ```jsx
 import { go } from 'reactigation'
 
 go('HelloWorld', 'modal')
+// Pass props to screen and use default screen transition.
+go('DetailPage', null, { id: 5 })
 ```
 
 Available transitions: `regular`, `slow`, `fast`, `none`, `opacity` & `modal`

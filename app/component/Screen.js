@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
 
 export const Screen = ({ title, links, showAnimations, backPossible }) => (
   <View style={styles.screen}>
-    {console.log('render screen', title)}
     <View style={styles.header}>
       {!backPossible ? (
         <View style={styles.headerPlaceholder} />
