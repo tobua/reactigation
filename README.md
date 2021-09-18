@@ -61,7 +61,7 @@ Available transitions: `regular`, `slow`, `fast`, `none`, `opacity` & `modal`
 
 ## Going Back
 
-Returning to the previous screen is simple. The animation defined by `go` will be applied in reverse. On Android when the user clicks the system back button this function is also called.
+Returning to the previous screen is simple. Unless defined otherwise the animation defined by `go` will be applied in reverse. On Android when the user clicks the system back button this function is also called.
 
 `back()`
 
