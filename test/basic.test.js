@@ -68,7 +68,7 @@ test('Can navigate between screens.', () => {
   })
 
   expect(input[0].mock.calls.length).toEqual(2)
-  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(2)
   expect(input[1].mock.calls.length).toEqual(1)
   expect(input[1].effectMock.calls.length).toEqual(1)
 
@@ -102,7 +102,7 @@ test("Back isn't possible for last screen.", () => {
   })
 
   expect(input[0].mock.calls.length).toEqual(2)
-  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(2)
   expect(input[1].mock.calls.length).toEqual(1)
   expect(input[2].mock.calls.length).toEqual(0)
 

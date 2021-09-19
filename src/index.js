@@ -7,10 +7,17 @@ import startTransition, {
   isTransitioning,
 } from './transition'
 
+type History = {
+  name: string,
+  Component: JSX.Element,
+  transition: string,
+  background: string,
+}
+
 // All the registered screens.
 const screens = {}
 // History of the screens visited.
-const history = []
+const history: History[] = []
 
 // React hook: const screen = useCurrentScreen()
 const currentScreenHookListeners = []
