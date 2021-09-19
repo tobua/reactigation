@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  StatusBar,
 } from 'react-native'
 import { go, useCurrentScreen } from 'reactigation'
 
@@ -45,6 +46,7 @@ export const Static = () => {
 
   return (
     <View style={styles.tabs}>
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
       {['First', 'Second', 'Third'].map((screenName) => (
         <TouchableOpacity
           key={screenName}

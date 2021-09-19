@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   Platform,
-  StatusBar,
 } from 'react-native'
 import { go, back } from 'reactigation'
 
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
 
 export const Modal = ({ title }) => (
   <View style={styles.modal}>
-    <StatusBar backgroundColor="white" barStyle="dark-content" />
     <TouchableOpacity
       underlayColor="white"
       style={styles.closeTouchable}
