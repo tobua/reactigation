@@ -1,7 +1,11 @@
 import React, { useState, useEffect, cloneElement } from 'react'
 import { Animated, View, BackHandler } from 'react-native'
 import styles from './styles'
-import startTransition, { initial, connect } from './transition'
+import startTransition, {
+  initial,
+  connect,
+  isTransitioning,
+} from './transition'
 
 // All the registered screens.
 const screens = {}
@@ -47,6 +51,9 @@ export const register = (
 
 // Go to certain screen.
 export const go = (name: string, transition?: string, props?: object) => {
+  if (isTransitioning()) {
+    return console.warn('Reactigation: Transition already in progress.')
+  }
   const currentScreen = screens[name]
   if (!currentScreen) {
     return console.warn(`Reactigation: Screen ${name} wasn't registered.`)
@@ -64,6 +71,9 @@ export const go = (name: string, transition?: string, props?: object) => {
 
 // Go back to previous screen.
 export const back = (transition?: string) => {
+  if (isTransitioning()) {
+    return console.warn('Reactigation: Transition already in progress.')
+  }
   if (history.length === 1) {
     return console.warn('Reactigation: Only one screen left, cannot go back.')
   }
@@ -109,7 +119,7 @@ const renderBottom = ({ Bottom }) => {
 
   return (
     <Animated.View
-      key={Bottom.name}
+      key={`${Bottom.name}_bottom`}
       style={[styles.back, { backgroundColor: Bottom.background }]}
     >
       {BottomWithProps}
@@ -126,7 +136,7 @@ const renderTop = ({ Top, reverse, left, top, opacity }) => {
 
   return (
     <Animated.View
-      key={Top.name}
+      key={`${Top.name}_top`}
       style={[
         styles.front,
         { left, top, opacity, backgroundColor: Top.background },

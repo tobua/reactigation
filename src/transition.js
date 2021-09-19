@@ -1,8 +1,10 @@
 import { Animated } from 'react-native'
 import * as animations from './animations'
 
-let setState, state
+let setState, state, running
 let afterRender = () => {}
+
+const transitionDone = () => (running = false)
 
 // Connects to Reactigation Component's setState.
 export const connect = (current) => {
@@ -21,9 +23,13 @@ export const initial = (Top) => ({
   opacity: new Animated.Value(1),
 })
 
+export const isTransitioning = () => running
+
 export default (Top, Bottom, transition = 'regular', reverse = false) => {
+  running = true
   // After state is set and new screens rendered, calling this handler starts the animation.
-  afterRender = animations[transition](state, reverse) || (() => {})
+  afterRender =
+    animations[transition](state, transitionDone, reverse) || (() => {})
 
   setState({
     ...state,

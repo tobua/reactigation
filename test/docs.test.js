@@ -1,8 +1,13 @@
 import React from 'react'
-import { View, Text, TouchableHighlight } from 'react-native'
+import { View, Text, TouchableHighlight, Animated } from 'react-native'
 import { act } from 'react-test-renderer'
 import Navigation, { register, go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
+
+// Animated won't work in test enviroment, mock it to resolve immediately.
+Animated.timing = () => ({
+  start: (done) => done(),
+})
 
 // https://github.com/facebook/jest/issues/4359
 jest.useFakeTimers()

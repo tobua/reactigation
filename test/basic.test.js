@@ -1,8 +1,14 @@
 import React from 'react'
+import { Animated } from 'react-native'
 import { act } from 'react-test-renderer'
 import Navigation, { go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
+
+// Animated won't work in test enviroment, mock it to resolve immediately.
+Animated.timing = () => ({
+  start: (done) => done(),
+})
 
 // https://github.com/facebook/jest/issues/4359
 jest.useFakeTimers()
@@ -52,14 +58,16 @@ test('Can navigate between screens.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  expect(input[0].mock.calls.length).toEqual(0)
-  expect(input[0].effectMock.calls.length).toEqual(0)
+  render(<Navigation />)
+
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(1)
 
   act(() => {
     go(names[1])
   })
 
-  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].mock.calls.length).toEqual(2)
   expect(input[0].effectMock.calls.length).toEqual(1)
   expect(input[1].mock.calls.length).toEqual(1)
   expect(input[1].effectMock.calls.length).toEqual(1)
@@ -68,7 +76,7 @@ test('Can navigate between screens.', () => {
     go(names[2])
   })
 
-  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].mock.calls.length).toEqual(2)
   // Second screen appears during both transitions.
   expect(input[1].mock.calls.length).toEqual(2)
   expect(input[2].mock.calls.length).toEqual(1)
@@ -114,16 +122,20 @@ test("Back isn't possible for last screen.", () => {
 
   act(() => {
     back()
+  })
+
+  act(() => {
     back()
   })
 
-  // Back twice will only render animation of last back, from 2 -> 1.
   expect(input[0].mock.calls.length).toEqual(3)
-  expect(input[1].mock.calls.length).toEqual(3)
-  expect(input[2].mock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(4)
+  expect(input[2].mock.calls.length).toEqual(2)
 
   expect(input[0].mock.calls[2][0].backPossible).toEqual(false)
   expect(input[1].mock.calls[2][0].backPossible).toEqual(true)
+  expect(input[1].mock.calls[3][0].backPossible).toEqual(true)
+  expect(input[2].mock.calls[1][0].backPossible).toEqual(true)
 
   destroy()
 })

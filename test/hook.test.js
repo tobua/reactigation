@@ -1,9 +1,15 @@
 import React from 'react'
+import { Animated } from 'react-native'
 import { act } from 'react-test-renderer'
 import Navigation, { go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 import { Hook } from './components/Hook'
+
+// Animated won't work in test enviroment, mock it to resolve immediately.
+Animated.timing = () => ({
+  start: (done) => done(),
+})
 
 // https://github.com/facebook/jest/issues/4359
 jest.useFakeTimers()
