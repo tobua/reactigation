@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 export const Static = () => {
   const currentScreen = useCurrentScreen()
 
-  if (currentScreen === 'Modal') {
+  if (currentScreen.includes('Modal')) {
     return null
   }
 

@@ -36,13 +36,14 @@ test('Can render several screens.', () => {
 
   const { screens } = render(<Navigation />)
 
-  expect(screens.length).toEqual(3)
+  expect(screens.length).toEqual(1)
 
-  names.forEach((name, index) => {
-    expect(input[0].effectMock.calls.length).toEqual(1)
-    expect(input[index].mock.calls.length).toEqual(1)
-    expect(input[index].mock.calls[0][1]).toEqual(name)
-  })
+  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].mock.calls[0][1]).toEqual('FirstScreen')
+
+  expect(input[1].mock.calls.length).toEqual(0)
+  expect(input[2].mock.calls.length).toEqual(0)
 
   destroy()
 })
@@ -51,28 +52,26 @@ test('Can navigate between screens.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(0)
-    expect(input[index].effectMock.calls.length).toEqual(0)
-  })
+  expect(input[0].mock.calls.length).toEqual(0)
+  expect(input[0].effectMock.calls.length).toEqual(0)
 
   act(() => {
     go(names[1])
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(1)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-  })
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].effectMock.calls.length).toEqual(1)
 
   act(() => {
     go(names[2])
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(2)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-  })
+  expect(input[0].mock.calls.length).toEqual(1)
+  // Second screen appears during both transitions.
+  expect(input[1].mock.calls.length).toEqual(2)
+  expect(input[2].mock.calls.length).toEqual(1)
 
   destroy()
 })
@@ -83,52 +82,48 @@ test("Back isn't possible for last screen.", () => {
 
   render(<Navigation />)
 
-  // All screens have been rendered, back initially not possible.
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(1)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-    expect(input[index].mock.calls[0][0].backPossible).toEqual(false)
-  })
+  // Visible screens have been rendered, back initially not possible.
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[0].mock.calls[0][0].backPossible).toEqual(false)
+  expect(input[1].mock.calls.length).toEqual(0)
+  expect(input[2].mock.calls.length).toEqual(0)
 
   act(() => {
     go(names[1])
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(2)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-  })
+  expect(input[0].mock.calls.length).toEqual(2)
+  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[2].mock.calls.length).toEqual(0)
 
   expect(input[0].mock.calls[1][0].backPossible).toEqual(false)
-  expect(input[1].mock.calls[1][0].backPossible).toEqual(true)
-  expect(input[2].mock.calls[1][0].backPossible).toEqual(false)
+  expect(input[1].mock.calls[0][0].backPossible).toEqual(true)
 
   act(() => {
     go(names[2])
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(3)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-  })
+  expect(input[0].mock.calls.length).toEqual(2)
+  expect(input[1].mock.calls.length).toEqual(2)
+  expect(input[2].mock.calls.length).toEqual(1)
 
-  expect(input[0].mock.calls[2][0].backPossible).toEqual(true)
-  expect(input[1].mock.calls[2][0].backPossible).toEqual(true)
-  expect(input[2].mock.calls[2][0].backPossible).toEqual(true)
+  expect(input[1].mock.calls[1][0].backPossible).toEqual(true)
+  expect(input[2].mock.calls[0][0].backPossible).toEqual(true)
 
   act(() => {
     back()
     back()
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(4)
-    expect(input[index].effectMock.calls.length).toEqual(1)
-  })
+  // Back twice will only render animation of last back, from 2 -> 1.
+  expect(input[0].mock.calls.length).toEqual(3)
+  expect(input[1].mock.calls.length).toEqual(3)
+  expect(input[2].mock.calls.length).toEqual(1)
 
-  expect(input[0].mock.calls[3][0].backPossible).toEqual(false)
-  expect(input[1].mock.calls[3][0].backPossible).toEqual(true)
-  expect(input[2].mock.calls[3][0].backPossible).toEqual(false)
+  expect(input[0].mock.calls[2][0].backPossible).toEqual(false)
+  expect(input[1].mock.calls[2][0].backPossible).toEqual(true)
 
   destroy()
 })
@@ -139,13 +134,10 @@ test('Props can be passed to screen with go().', () => {
 
   const { screens } = render(<Navigation />)
 
-  expect(screens.length).toEqual(3)
+  expect(screens.length).toEqual(1)
 
-  // All screens have been rendered, back initially not possible.
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(1)
-    expect(input[index].mock.calls[0][0].productId).toEqual(undefined)
-  })
+  expect(input[0].mock.calls.length).toBe(1)
+  expect(input[0].mock.calls[0][0].productId).toBe(undefined)
 
   act(() => {
     go(names[1], 'regular', {
@@ -153,11 +145,11 @@ test('Props can be passed to screen with go().', () => {
     })
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(2)
-  })
+  expect(input[0].mock.calls.length).toEqual(2)
+  expect(input[1].mock.calls.length).toEqual(1)
 
-  expect(input[1].mock.calls[1][0].productId).toBe(123)
+  expect(input[0].mock.calls[1][0].productId).toBe(undefined)
+  expect(input[1].mock.calls[0][0].productId).toBe(123)
 
   act(() => {
     // Second argument can be left unspecified.
@@ -166,12 +158,12 @@ test('Props can be passed to screen with go().', () => {
     })
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(3)
-  })
+  expect(input[0].mock.calls.length).toEqual(2)
+  expect(input[1].mock.calls.length).toEqual(2)
+  expect(input[2].mock.calls.length).toEqual(1)
 
-  expect(input[1].mock.calls[2][0].productId).toBe(123)
-  expect(input[2].mock.calls[2][0].productId).toBe(456)
+  expect(input[1].mock.calls[1][0].productId).toBe(123)
+  expect(input[2].mock.calls[0][0].productId).toBe(456)
 
   act(() => {
     back()
@@ -181,13 +173,14 @@ test('Props can be passed to screen with go().', () => {
     go(names[2], undefined)
   })
 
-  names.forEach((name, index) => {
-    expect(input[index].mock.calls.length).toEqual(5)
-  })
+  expect(input[0].mock.calls.length).toEqual(2)
+  expect(input[1].mock.calls.length).toEqual(4)
+  expect(input[2].mock.calls.length).toEqual(3)
 
-  expect(input[0].mock.calls[4][0].productId).toBe(undefined)
-  expect(input[1].mock.calls[4][0].productId).toBe(123)
-  expect(input[2].mock.calls[4][0].productId).toBe(undefined)
+  expect(input[1].mock.calls[2][0].productId).toBe(123)
+  expect(input[1].mock.calls[3][0].productId).toBe(123)
+  expect(input[2].mock.calls[1][0].productId).toBe(456)
+  expect(input[2].mock.calls[2][0].productId).toBe(undefined)
 
   destroy()
 })

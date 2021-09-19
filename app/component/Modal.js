@@ -32,6 +32,15 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
   },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+  description: {
+    fontSize: 25,
+    color: 'black',
+  },
 })
 
 export const Modal = ({ title }) => (

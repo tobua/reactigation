@@ -1,13 +1,15 @@
 import { Animated } from 'react-native'
 import * as animations from './animations'
 
-let setState, state, setStateEnd
+let setState, state
+let afterRender = () => {}
 
 // Connects to Reactigation Component's setState.
 export const connect = (current) => {
   state = current.state
   setState = current.setState
-  setStateEnd = current.setStateEnd
+
+  return afterRender
 }
 
 // Sets initial screen and values.
@@ -20,8 +22,8 @@ export const initial = (Top) => ({
 })
 
 export default (Top, Bottom, transition = 'regular', reverse = false) => {
-  // After the state was set, this handler is called, starting the animation.
-  setStateEnd.handler = animations[transition](state, reverse) || (() => {})
+  // After state is set and new screens rendered, calling this handler starts the animation.
+  afterRender = animations[transition](state, reverse) || (() => {})
 
   setState({
     ...state,

@@ -25,19 +25,14 @@ export const useCurrentScreen = () => {
 
 // Register a screen.
 export const register = (
-  Component,
-  name,
+  Component: JSX.Element,
+  name: string,
   { transition, background } = {
     transition: 'regular',
     background: 'white',
   }
 ) => {
-  const screen = {
-    Component,
-    transition,
-    background,
-    name,
-  }
+  const screen = { Component, transition, background, name }
   if (!name) {
     return console.error(
       'Reactigation: Trying to register a Component without a name as the second argument.'
@@ -68,7 +63,7 @@ export const go = (name: string, transition?: string, props?: object) => {
 }
 
 // Go back to previous screen.
-export const back = (transition) => {
+export const back = (transition?: string) => {
   if (history.length === 1) {
     return console.warn('Reactigation: Only one screen left, cannot go back.')
   }
@@ -101,87 +96,55 @@ BackHandler.addEventListener('hardwareBackPress', () => {
   return true
 })
 
-// Move Top screen to first position, so that it's always visible.
-const unshiftTop = (screenKeys, state) => {
-  const { Top } = state
-  screenKeys.sort((x, y) => (x === Top.name ? 1 : y === Top.name ? -1 : 0))
-  return screenKeys
-}
-
-const renderScreen = (screen, state) => {
-  const { Top, Bottom, left, top, opacity, reverse } = state
-
-  // Renders the Top screen, which should always be available.
-  // Movements are animated on the Top Component.
-  if (screen.name === Top.name) {
-    const TopWithProps = cloneElement(Top.Component, {
-      backPossible: history.length > 1 || !!reverse,
-      title: Top.name,
-      ...Top.props,
-    })
-
-    return (
-      <Animated.View
-        key={Top.name}
-        style={[
-          styles.front,
-          { left, top, opacity, backgroundColor: Top.background },
-        ]}
-      >
-        {TopWithProps}
-      </Animated.View>
-    )
+const renderBottom = ({ Bottom }) => {
+  if (!Bottom) {
+    return
   }
 
-  // Renders the Bottom screen if available.
-  if (Bottom && screen.name === Bottom.name) {
-    if (!Bottom) {
-      return
-    }
-
-    const BottomWithProps = cloneElement(Bottom.Component, {
-      backPossible: history.length > 1 && Bottom !== history[0],
-      title: Bottom.name,
-      ...Bottom.props,
-    })
-
-    return (
-      <Animated.View
-        key={Bottom.name}
-        style={[styles.back, { backgroundColor: Bottom.background }]}
-      >
-        {BottomWithProps}
-      </Animated.View>
-    )
-  }
-
-  const ScreenWithProps = cloneElement(screen.Component, {
-    backPossible: history.length > 2,
-    title: screen.name,
+  const BottomWithProps = cloneElement(Bottom.Component, {
+    backPossible: history.length > 1 && Bottom !== history[0],
+    title: Bottom.name,
+    ...Bottom.props,
   })
 
   return (
-    <Animated.View key={screen.name} style={[styles.other]}>
-      {ScreenWithProps}
+    <Animated.View
+      key={Bottom.name}
+      style={[styles.back, { backgroundColor: Bottom.background }]}
+    >
+      {BottomWithProps}
     </Animated.View>
   )
 }
 
-const setStateEnd = {
-  handler: () => {},
-}
-
-export default ({}) => {
-  const [state, setState] = useState(initial(history[0]))
-  connect({ setState, state, setStateEnd })
-
-  useEffect(() => setStateEnd.handler(), [state])
-
-  const orderedScreenKeys = unshiftTop(Object.keys(screens), state)
-  const renderedScreens = orderedScreenKeys.map((key) => {
-    const screen = screens[key]
-    return renderScreen(screen, state)
+const renderTop = ({ Top, reverse, left, top, opacity }) => {
+  const TopWithProps = cloneElement(Top.Component, {
+    backPossible: history.length > 1 || !!reverse,
+    title: Top.name,
+    ...Top.props,
   })
 
-  return <View style={styles.wrapper}>{renderedScreens}</View>
+  return (
+    <Animated.View
+      key={Top.name}
+      style={[
+        styles.front,
+        { left, top, opacity, backgroundColor: Top.background },
+      ]}
+    >
+      {TopWithProps}
+    </Animated.View>
+  )
+}
+
+export default () => {
+  const [state, setState] = useState(initial(history[0]))
+  const afterRender = connect({ setState, state })
+
+  useEffect(afterRender, [afterRender])
+
+  const Top = renderTop(state)
+  const Bottom = renderBottom(state)
+
+  return <View style={styles.wrapper}>{[Bottom, Top]}</View>
 }
