@@ -25,10 +25,22 @@ const updateCurrentScreenHookListeners = (screen) =>
   currentScreenHookListeners.forEach((listener) => listener(screen))
 
 export const useCurrentScreen = () => {
-  const [currentScreen, setCurrentScreen] = useState(history[0].name)
+  const initialScreenName = history[history.length - 1].name
+  const [currentScreen, setCurrentScreen] = useState(initialScreenName)
 
   useEffect(() => {
     currentScreenHookListeners.push(setCurrentScreen)
+
+    // Clear up old listeners.
+    return () => {
+      const index = currentScreenHookListeners.findIndex(
+        (listener) => listener === setCurrentScreen
+      )
+
+      if (index !== -1) {
+        currentScreenHookListeners.splice(index, 1)
+      }
+    }
   }, [])
 
   return currentScreen
