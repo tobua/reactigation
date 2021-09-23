@@ -4,8 +4,6 @@ import * as animations from './animations'
 let setState, state, running
 let afterRender = () => {}
 
-const transitionDone = () => (running = false)
-
 // Connects to Reactigation Component's setState.
 export const connect = (current) => {
   state = current.state
@@ -25,16 +23,25 @@ export const initial = (Top) => ({
 
 export const isTransitioning = () => running
 
-export default (Top, Bottom, transition = 'regular', reverse = false) => {
+export default (Top, Bottom, transitionName = 'regular', reverse = false) => {
+  const transition = animations[transitionName]
+  const configuration =
+    typeof transition === 'function' ? { animation: transition } : transition
   running = true
+  const done = () => {
+    running = false
+    if (reverse && configuration.backdrop) {
+      setState({ ...state, backdrop: false })
+    }
+  }
   // After state is set and new screens rendered, calling this handler starts the animation.
-  afterRender =
-    animations[transition](state, transitionDone, reverse) || (() => {})
+  afterRender = configuration.animation(state, done, reverse) || (() => {})
 
   setState({
     ...state,
     Top: Top,
     Bottom: Bottom,
     reverse,
+    backdrop: configuration.backdrop,
   })
 }

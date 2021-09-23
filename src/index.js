@@ -1,5 +1,5 @@
 import React, { useState, useEffect, cloneElement } from 'react'
-import { Animated, View, BackHandler } from 'react-native'
+import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import startTransition, {
   initial,
@@ -146,14 +146,14 @@ const renderBottom = ({ Bottom }) => {
   )
 }
 
-const renderTop = ({ Top, reverse, left, top, opacity }) => {
+const renderTop = ({ Top, reverse, left, top, opacity, backdrop }) => {
   const TopWithProps = cloneElement(Top.Component, {
     backPossible: history.length > 1 || !!reverse,
     title: Top.name,
     ...Top.props,
   })
 
-  return (
+  const screen = (
     <Animated.View
       key={`${Top.name}_top`}
       style={[
@@ -164,6 +164,19 @@ const renderTop = ({ Top, reverse, left, top, opacity }) => {
       {TopWithProps}
     </Animated.View>
   )
+
+  if (backdrop) {
+    return (
+      <View key={`${Top.name}_top`} style={styles.stretch}>
+        <View style={styles.backdrop}>
+          <TouchableOpacity style={styles.stretch} onPress={() => back()} />
+        </View>
+        {screen}
+      </View>
+    )
+  }
+
+  return screen
 }
 
 export default () => {
@@ -175,5 +188,5 @@ export default () => {
   const Top = renderTop(state)
   const Bottom = renderBottom(state)
 
-  return <View style={styles.wrapper}>{[Bottom, Top]}</View>
+  return <View style={styles.stretch}>{[Bottom, Top]}</View>
 }

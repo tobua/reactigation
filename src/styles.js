@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 
 export default StyleSheet.create({
-  wrapper: {
+  stretch: {
     flex: 1,
   },
   front: {
@@ -17,5 +17,10 @@ export default StyleSheet.create({
     top: 0,
     bottom: 0,
     width: '100%',
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'black',
+    opacity: 0.5,
   },
 })

@@ -8,24 +8,47 @@ import { Modal } from './component/Modal'
 
 // All possible screen components.
 const Screens = {
-  First: (
-    <Screen key="First" title="FirstScreen" showAnimations links={['Second']} />
-  ),
-  Second: (
-    <Screen key="Second" title="SecondScreen" links={['First', 'Third']} />
-  ),
-  Third: (
-    <Screen key="Third" title="ThirdScreen" showAnimations links={['Second']} />
-  ),
-  Modal: <Modal key="Modal" title="Modal" />,
-  AnotherModal: <Modal key="AnotherModal" title="Another Modal" />,
+  First: {
+    component: (
+      <Screen
+        key="First"
+        title="FirstScreen"
+        showAnimations
+        links={['Second']}
+      />
+    ),
+  },
+  Second: {
+    component: (
+      <Screen key="Second" title="SecondScreen" links={['First', 'Third']} />
+    ),
+  },
+  Third: {
+    component: (
+      <Screen
+        key="Third"
+        title="ThirdScreen"
+        showAnimations
+        links={['Second']}
+      />
+    ),
+    background: 'lightgray',
+  },
+  Modal: {
+    component: <Modal key="Modal" title="Modal" />,
+    transition: 'modal',
+  },
+  PeekModal: {
+    component: <Modal key="PeekModal" title="Peek Modal" />,
+    transition: 'peek',
+  },
 }
 
 // Register screens.
-Object.keys(Screens).map((ScreenName) =>
-  register(Screens[ScreenName], ScreenName, {
-    transition: ScreenName.includes('Modal') ? 'modal' : undefined,
-    background: ScreenName === 'Second' ? 'lightgray' : 'white',
+Object.entries(Screens).map(([name, configuration]) =>
+  register(configuration.component, name, {
+    transition: configuration.transition,
+    background: configuration.background,
   })
 )
 

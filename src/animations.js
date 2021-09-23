@@ -90,3 +90,26 @@ export const modal = (state, done, reverse = false) => {
 
   return handlerTop(state.top, reverse, done)
 }
+
+const handlerTopHalf =
+  (value, reverse, done, duration = 500) =>
+  () => {
+    Animated.timing(value, {
+      toValue: reverse ? height : height / 2,
+      easing: Easing.ease,
+      useNativeDriver: false,
+      duration,
+    }).start(done)
+  }
+
+export const peek = {
+  name: 'peek',
+  backdrop: true,
+  animation: (state, done, reverse = false) => {
+    state.left.setValue(0)
+    state.top.setValue(reverse ? height / 2 : height)
+    state.opacity.setValue(1)
+
+    return handlerTopHalf(state.top, reverse, done)
+  },
+}

@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     color: 'black',
+    marginBottom: 20,
   },
   description: {
     fontSize: 25,
@@ -52,8 +53,10 @@ export const Modal = ({ title }) => (
       <Text style={styles.close}>Close</Text>
     </TouchableOpacity>
     <Text style={styles.title}>{title}</Text>
-    <TouchableOpacity onPress={() => go('AnotherModal')}>
-      <Text style={styles.description}>Open Another Modal</Text>
-    </TouchableOpacity>
+    {title !== 'PeekModal' && (
+      <TouchableOpacity onPress={() => go('PeekModal')}>
+        <Text style={styles.description}>Peek Another Modal</Text>
+      </TouchableOpacity>
+    )}
   </View>
 )
