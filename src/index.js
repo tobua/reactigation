@@ -50,7 +50,7 @@ export const useCurrentScreen = () => {
 export const register = (
   Component: JSX.Element,
   name: string,
-  { transition, background } = {
+  { transition = 'regular', background = 'white' } = {
     transition: 'regular',
     background: 'white',
   }
