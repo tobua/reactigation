@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/tobua/reactigation/compare/v2.0.1...v2.0.2) (2021-09-23)
+
+
+### Bug Fixes
+
+* **register:** make sure all default screen properties are always set ([0ac4e09](https://github.com/tobua/reactigation/commit/0ac4e09c52068cc1d2f0b2d334904690009b7a3f))
+
 ### [2.0.1](https://github.com/tobua/reactigation/compare/v2.0.0...v2.0.1) (2021-09-19)
 
 
