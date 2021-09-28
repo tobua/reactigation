@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.1](https://github.com/tobua/reactigation/compare/v2.1.0...v2.1.1) (2021-09-28)
+
+
+### Bug Fixes
+
+* **package:** add exports field for ESM interoperability with expo snack ([0633f25](https://github.com/tobua/reactigation/commit/0633f25ec81795bca91a748e1315fc5c58b9b4ce))
+
 ## [2.1.0](https://github.com/tobua/reactigation/compare/v2.0.2...v2.1.0) (2021-09-23)
 
 
