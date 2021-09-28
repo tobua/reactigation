@@ -20,25 +20,21 @@ A minimal setup with two screens looks like this.
 
 ```jsx
 import React from 'react'
-import { AppRegistry, View, Text, TouchableHighlight } from 'react-native'
+import { AppRegistry, Text, TouchableHighlight } from 'react-native'
 import Reactigation, { register, go, back } from 'reactigation'
 
 const FirstScreen = (props) => (
-  <View style={{ margin: 50 }}>
+  <>
     <Text>{props.title} Screen</Text>
-    <TouchableHighlight onPress={() => go('Second')}>
-      <Text>go to SecondScreen</Text>
-    </TouchableHighlight>
-  </View>
+    <Button title="go to Second Screen" onPress={() => go('Second')} />
+  </>
 )
 
 const SecondScreen = (props) => (
-  <View style={{ margin: 50 }}>
+  <>
     <Text>{props.title} Screen</Text>
-    <TouchableHighlight onPress={() => back()}>
-      <Text>go back</Text>
-    </TouchableHighlight>
-  </View>
+    <Button title="go back" onPress={() => back()} />
+  </>
 )
 
 register(<FirstScreen />, 'First')
@@ -61,7 +57,7 @@ go('HelloWorld', 'modal')
 go('DetailPage', null, { id: 5 })
 ```
 
-Available transitions: `regular`, `slow`, `fast`, `none`, `opacity` & `modal`
+Available transitions: `regular`, `slow`, `fast`, `none`, `opacity`, `modal` & `peek`
 
 ## Going Back
 
