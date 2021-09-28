@@ -4,6 +4,8 @@
 
 # Reactigation
 
+[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![run in expo snack](https://img.shields.io/badge/Run%20in%20Expo%20Snack-4630EB.svg?style=flat-square&logo=EXPO&labelColor=FFF&logoColor=000)](https://snack.expo.dev/grx2quaU-)
+
 JS-only Navigation for React Native.
 
 ## Installation
