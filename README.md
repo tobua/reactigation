@@ -4,7 +4,7 @@
 
 # Reactigation
 
-[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![run in expo snack](https://img.shields.io/badge/Run%20in%20Expo%20Snack-4630EB.svg?style=flat-square&logo=EXPO&labelColor=FFF&logoColor=000)](https://snack.expo.dev/grx2quaU-)
+[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![run in expo snack](https://img.shields.io/badge/Try%20out%20in%20Expo%20Snack-4630EB.svg?style=flat-square&logo=EXPO&labelColor=FFF&logoColor=000)](https://snack.expo.dev/grx2quaU-)
 
 JS-only Navigation for React Native.
 
@@ -20,7 +20,7 @@ A minimal setup with two screens looks like this.
 
 ```jsx
 import React from 'react'
-import { AppRegistry, Text, TouchableHighlight } from 'react-native'
+import { AppRegistry, Text, Button } from 'react-native'
 import Reactigation, { register, go, back } from 'reactigation'
 
 const FirstScreen = (props) => (

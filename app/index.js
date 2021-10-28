@@ -60,3 +60,12 @@ const App = () => (
 )
 
 AppRegistry.registerComponent(appName, () => App)
+// npx react-scripts start
+// npm install react-dom react-native-web
+// npm install --save-dev babel-plugin-react-native-web
+// add public/index.html
+// add main field to package.json pointing to index.js, doesn't work
+// npm install --save-dev eslint-plugin-prettier, probably only eslint required, or prettier.
+// AppRegistry.runApplication(appName, {
+//   rootTag: document.getElementById('root'),
+// })
