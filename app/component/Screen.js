@@ -1,13 +1,8 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Platform, Image } from 'react-native'
 import { go, back } from 'reactigation'
 import { AnimatedLink } from './AnimatedLink'
+import logo from '../logo.png'
 
 // Shadow styles with iOS Compatibility (elevation).
 const shadow = () => ({
@@ -70,7 +65,17 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 25,
+    marginBottom: 10,
     color: 'black',
+  },
+  about: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  logo: {
+    marginBottom: 20,
+    width: 112.5,
+    height: 125,
   },
 })
 
@@ -80,11 +85,7 @@ export const Screen = ({ title, links, showAnimations, backPossible }) => (
       {!backPossible ? (
         <View style={styles.headerPlaceholder} />
       ) : (
-        <TouchableOpacity
-          underlayColor="white"
-          style={styles.backTouchable}
-          onPress={() => back()}
-        >
+        <TouchableOpacity underlayColor="white" style={styles.backTouchable} onPress={() => back()}>
           <Text style={styles.back}>Back</Text>
         </TouchableOpacity>
       )}
@@ -99,9 +100,20 @@ export const Screen = ({ title, links, showAnimations, backPossible }) => (
           showAnimations={showAnimations}
         />
       ))}
-      <TouchableOpacity onPress={() => go('Modal')}>
+      <TouchableOpacity onPress={() => go('Modal', 'modal')}>
         <Text style={styles.description}>Open Modal</Text>
       </TouchableOpacity>
+      {title !== 'First' && (
+        <TouchableOpacity onPress={() => back('opacity')}>
+          <Text style={styles.description}>Back Using Opacity</Text>
+        </TouchableOpacity>
+      )}
     </View>
+    {title === 'First' && (
+      <View style={styles.about}>
+        <Image style={styles.logo} source={logo} />
+        <Text>reactigation Demo</Text>
+      </View>
+    )}
   </View>
 )

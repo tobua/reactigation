@@ -5,7 +5,7 @@ import copy from 'recursive-copy'
 import rimraf from 'rimraf'
 
 // Enhances source files inside /app with a fresh RN project template.
-const appName = 'NavigationApp'
+const appName = 'ReactigationApp'
 
 console.log('⌛ Initializing a fresh RN project...')
 
@@ -18,7 +18,7 @@ execSync(`npx react-native init ${appName}`, {
 await copy(appName, 'app', {
   dot: true,
   overwrite: false,
-  filter: ['**/*', '!App.js'],
+  filter: ['**/*', '!App.js', '!index.js'],
 })
 
 // Remove temporary project directory.
@@ -32,9 +32,9 @@ execSync('npm install $(npm pack .. | tail -1) --legacy-peer-deps', {
 
 console.log('')
 console.log('🍞 React Native App created inside /app.')
-console.log('🛠️  To run the example with the plugin included:')
+console.log('🛠️ To run the example with the plugin included:')
 console.log('🐚 cd app')
 console.log('🐚 npm run ios / npm run android')
-console.log('🌪️  To copy over the changes from the plugin source run:')
+console.log('🌪️ To copy over the changes from the plugin source run:')
 console.log('🐚 npm run watch')
-console.log('🛠️  This will copy changes over to the app.')
+console.log('🛠️ This will copy changes over to the app.')

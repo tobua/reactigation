@@ -1,12 +1,14 @@
 /* eslint-env jest */
 import renderer, { act } from 'react-test-renderer'
 
-export default (Navigation) => {
+export default (Navigation: JSX.Element) => {
   let rendered
   // act to ensure effects are flushed in initial render.
   act(() => {
     rendered = renderer.create(Navigation)
   })
+
+  // @ts-ignore TODO check if act can be avoided
   const tree = rendered.toJSON()
 
   if (Array.isArray(tree)) {
@@ -23,6 +25,6 @@ export default (Navigation) => {
     tree,
     wrapper: screensRoot,
     wrappers: screensRoot.children,
-    screens: screensRoot.children.map((wrapper) => wrapper.children[0]),
+    screens: screensRoot.children.map((wrapper: any) => wrapper.children[0]),
   }
 }

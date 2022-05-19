@@ -1,0 +1,18 @@
+name: push
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm install --legacy-peer-deps
+      - run: npm run build
+      - name: Test 📱
+        run: npm test
+      - uses: tobua/release-npm-action@v1
+        with:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

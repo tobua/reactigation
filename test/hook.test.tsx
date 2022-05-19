@@ -6,9 +6,9 @@ import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 import { Hook } from './components/Hook'
 
-// Animated won't work in test enviroment, mock it to resolve immediately.
+// @ts-ignore Animated won't work in test enviroment, mock it to resolve immediately.
 Animated.timing = () => ({
-  start: (done) => done(),
+  start: (done: () => void) => done(),
 })
 
 // https://github.com/facebook/jest/issues/4359

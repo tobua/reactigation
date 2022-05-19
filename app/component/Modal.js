@@ -1,11 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native'
 import { go, back } from 'reactigation'
 
 const styles = StyleSheet.create({
@@ -45,16 +39,12 @@ const styles = StyleSheet.create({
 
 export const Modal = ({ title }) => (
   <View style={styles.modal}>
-    <TouchableOpacity
-      underlayColor="white"
-      style={styles.closeTouchable}
-      onPress={() => back()}
-    >
+    <TouchableOpacity underlayColor="white" style={styles.closeTouchable} onPress={() => back()}>
       <Text style={styles.close}>Close</Text>
     </TouchableOpacity>
     <Text style={styles.title}>{title}</Text>
     {title !== 'PeekModal' && (
-      <TouchableOpacity onPress={() => go('PeekModal')}>
+      <TouchableOpacity onPress={() => go('PeekModal', 'peek')}>
         <Text style={styles.description}>Peek Another Modal</Text>
       </TouchableOpacity>
     )}

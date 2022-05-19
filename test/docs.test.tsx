@@ -4,9 +4,9 @@ import { act } from 'react-test-renderer'
 import Navigation, { register, go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 
-// Animated won't work in test enviroment, mock it to resolve immediately.
+// @ts-ignore Animated won't work in test enviroment, mock it to resolve immediately.
 Animated.timing = () => ({
-  start: (done) => done(),
+  start: (done: () => void) => done(),
 })
 
 // https://github.com/facebook/jest/issues/4359
@@ -15,7 +15,7 @@ Date.now = jest.fn(() => 1503187200000)
 
 test('Two Screen Example with Interaction.', () => {
   const firstScreenMock = jest.fn()
-  const FirstScreen = (props) => {
+  const FirstScreen = (props: { title?: string }) => {
     firstScreenMock(props)
     return (
       <View>
@@ -28,7 +28,7 @@ test('Two Screen Example with Interaction.', () => {
   }
 
   const secondScreenMock = jest.fn()
-  const SecondScreen = (props) => {
+  const SecondScreen = (props: { title?: string }) => {
     secondScreenMock(props)
     return (
       <View>

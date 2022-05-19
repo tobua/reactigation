@@ -5,9 +5,9 @@ import Navigation, { go, back, destroy } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 
-// Animated won't work in test enviroment, mock it to resolve immediately.
+// @ts-ignore Animated won't work in test enviroment, mock it to resolve immediately.
 Animated.timing = () => ({
-  start: (done) => done(),
+  start: (done: () => void) => done(),
 })
 
 // https://github.com/facebook/jest/issues/4359
@@ -165,7 +165,7 @@ test('Props can be passed to screen with go().', () => {
 
   act(() => {
     // Second argument can be left unspecified.
-    go(names[2], null, {
+    go(names[2], undefined, {
       productId: 456,
     })
   })
@@ -193,6 +193,44 @@ test('Props can be passed to screen with go().', () => {
   expect(input[1].mock.calls[3][0].productId).toBe(123)
   expect(input[2].mock.calls[1][0].productId).toBe(456)
   expect(input[2].mock.calls[2][0].productId).toBe(undefined)
+
+  destroy()
+})
+
+test('Warning if unknown transition is used.', () => {
+  // Mock console.warn.
+  const consoleWarn = console.warn
+  console.warn = jest.fn()
+
+  const names = ['FirstScreen']
+  const input = setupScreens(names)
+
+  const { screens } = render(<Navigation />)
+
+  expect(screens.length).toEqual(1)
+
+  expect(input[0].mock.calls.length).toBe(1)
+
+  act(() => {
+    // @ts-ignore
+    go(names[0], 'unknown')
+  })
+
+  act(() => {
+    // @ts-ignore
+    go(names[0], 'another')
+  })
+
+  act(() => {
+    go(names[0], 'fast')
+  })
+
+  expect(input[0].mock.calls.length).toBe(3)
+
+  expect((console.warn as jest.Mock).mock.calls.length).toBe(2)
+
+  // Restore initial console.
+  console.warn = consoleWarn
 
   destroy()
 })

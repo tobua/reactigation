@@ -19,9 +19,7 @@ const styles = StyleSheet.create({
 
 const renderLink = ({ name, textStyle, showAnimations }) => {
   if (showAnimations) {
-    return (
-      <Text style={[textStyle, styles.hasAnimations]}>Go to {name}Screen</Text>
-    )
+    return <Text style={[textStyle, styles.hasAnimations]}>Go to {name}Screen</Text>
   }
 
   return (
@@ -37,10 +35,7 @@ export const AnimatedLink = (props) => (
     {props.showAnimations && (
       <View style={styles.animations}>
         {animations.map((animation) => (
-          <TouchableOpacity
-            key={animation}
-            onPress={() => go(props.name, animation.toLowerCase())}
-          >
+          <TouchableOpacity key={animation} onPress={() => go(props.name, animation.toLowerCase())}>
             <Text style={styles.text}>{animation} Animation</Text>
           </TouchableOpacity>
         ))}

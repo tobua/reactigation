@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-  StatusBar,
-} from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity, Platform, StatusBar } from 'react-native'
 import { go, useCurrentScreen } from 'reactigation'
 
 // Shadow styles with iOS Compatibility (elevation).
@@ -48,15 +41,9 @@ export const Static = () => {
     <View style={styles.tabs}>
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       {['First', 'Second', 'Third'].map((screenName) => (
-        <TouchableOpacity
-          key={screenName}
-          onPress={() => go(screenName, 'none')}
-        >
+        <TouchableOpacity key={screenName} onPress={() => go(screenName, 'none')}>
           <Text
-            style={[
-              styles.description,
-              currentScreen === screenName ? styles.bold : undefined,
-            ]}
+            style={[styles.description, currentScreen === screenName ? styles.bold : undefined]}
           >
             {screenName}
           </Text>

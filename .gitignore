@@ -1,7 +1,9 @@
 node_modules
 package-lock.json
-NavigationApp
+dist
+ReactigationApp
 app/**/*
 !app/index.js
+!app/logo.png
 !app/component
 !app/component/*

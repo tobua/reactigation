@@ -1,12 +1,13 @@
 <p align="center">
-  <img src="https://github.com/tobua/reactigation/raw/master/video.gif" alt="Reactigation" width="250">
+  <img src="https://github.com/tobua/reactigation/raw/main/video.gif" alt="Reactigation" width="250">
+  <!--- Recorded from iOS Simulator using ⌘ ⇧ 5 combination and converted with Gifsky from Mac App Store. -->
 </p>
 
 # Reactigation
 
 [![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![run in expo snack](https://img.shields.io/badge/Try%20out%20in%20Expo%20Snack-4630EB.svg?style=flat-square&logo=EXPO&labelColor=FFF&logoColor=000)](https://snack.expo.dev/grx2quaU-)
 
-JS-only Navigation for React Native.
+Navigation for React Native using only JavaScript.
 
 ## Installation
 
@@ -150,12 +151,12 @@ To develop the plugin further generate and run the example app. After that `npm 
 The idea for the plugin came after experiencing some issues with native dependencies for an existing React Native navigation plugin.
 
 <a href="https://github.com/kmagiera/react-native-gesture-handler/issues/494#issuecomment-471204581">
-  <img src="https://github.com/naminho/reactigation/raw/master/inspiration.png" alt="Inspiration Comment">
+  <img src="https://github.com/naminho/reactigation/raw/main/inspiration.png" alt="Inspiration Comment">
 </a>
 
 <br />
 <br />
 
 <p align="center">
-  <img src="https://github.com/naminho/reactigation/raw/master/logo.png" alt="Reactigation" width="250">
+  <img src="https://github.com/naminho/reactigation/raw/main/logo.png" alt="Reactigation" width="250">
 </p>
