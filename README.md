@@ -51,14 +51,15 @@ At runtime it's possible to navigate to any of the registered screens. A transit
 `go(screen: string, transition?: string, props?: object)`
 
 ```jsx
-import { go } from 'reactigation'
+import { go, Transition } from 'reactigation'
 
 go('HelloWorld', 'modal')
+go('AboutScreen', Transition.fast)
 // Pass props to screen and use default screen transition.
 go('DetailPage', null, { id: 5 })
 ```
 
-Available transitions: `regular`, `slow`, `fast`, `none`, `opacity`, `modal` & `peek`
+Available transitions: `regular`, `slow`, `fast`, `none`, `opacity`, `modal` & `peek` can all be imported as `Transition`.
 
 ## Going Back
 

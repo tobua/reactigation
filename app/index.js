@@ -1,6 +1,6 @@
 import React from 'react'
 import { AppRegistry } from 'react-native'
-import Reactigation, { register } from 'reactigation'
+import Reactigation, { register, Transition } from 'reactigation'
 import { name as appName } from './app.json'
 import { Static } from './component/Static'
 import { Screen } from './component/Screen'
@@ -9,38 +9,22 @@ import { Modal } from './component/Modal'
 // All possible screen components.
 const Screens = {
   First: {
-    component: (
-      <Screen
-        key="First"
-        title="FirstScreen"
-        showAnimations
-        links={['Second']}
-      />
-    ),
+    component: <Screen key="First" title="FirstScreen" showAnimations links={['Second']} />,
   },
   Second: {
-    component: (
-      <Screen key="Second" title="SecondScreen" links={['First', 'Third']} />
-    ),
+    component: <Screen key="Second" title="SecondScreen" links={['First', 'Third']} />,
   },
   Third: {
-    component: (
-      <Screen
-        key="Third"
-        title="ThirdScreen"
-        showAnimations
-        links={['Second']}
-      />
-    ),
+    component: <Screen key="Third" title="ThirdScreen" showAnimations links={['Second']} />,
     background: 'lightgray',
   },
   Modal: {
     component: <Modal key="Modal" title="Modal" />,
-    transition: 'modal',
+    transition: Transition.modal,
   },
   PeekModal: {
     component: <Modal key="PeekModal" title="Peek Modal" />,
-    transition: 'peek',
+    transition: Transition.peek,
   },
 }
 
@@ -60,12 +44,3 @@ const App = () => (
 )
 
 AppRegistry.registerComponent(appName, () => App)
-// npx react-scripts start
-// npm install react-dom react-native-web
-// npm install --save-dev babel-plugin-react-native-web
-// add public/index.html
-// add main field to package.json pointing to index.js, doesn't work
-// npm install --save-dev eslint-plugin-prettier, probably only eslint required, or prettier.
-// AppRegistry.runApplication(appName, {
-//   rootTag: document.getElementById('root'),
-// })

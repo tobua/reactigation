@@ -1,6 +1,6 @@
 import { Animated } from 'react-native'
 import animations from './animations'
-import { Animation, Screen, State } from './types'
+import { Transition, Screen, State, TransitionString } from './types'
 
 let setState: (state: State) => void, state: State, running: boolean
 let afterRender = () => {}
@@ -24,7 +24,12 @@ export const initial: (Top: Screen) => State = (Top) => ({
 
 export const isTransitioning = () => running
 
-export default (Top: Screen, Bottom: Screen, animation: Animation = 'regular', reverse = false) => {
+export default (
+  Top: Screen,
+  Bottom: Screen,
+  animation: Transition | TransitionString = Transition.regular,
+  reverse = false
+) => {
   const transition = animations[animation]
   running = true
   const done = () => {

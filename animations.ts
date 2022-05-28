@@ -1,10 +1,10 @@
 import { Animated, Dimensions, Easing } from 'react-native'
-import { Animation, State } from './types'
+import { Transition, State } from './types'
 
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
-// Animation finish handler.
+// Transition finish handler.
 const handlerLeft =
   (value: Animated.Value, done: () => void, reverse?: boolean, duration = 500) =>
   () => {
@@ -141,7 +141,7 @@ export default {
   modal,
   peek,
 } as Record<
-  Animation,
+  Transition,
   {
     backdrop?: boolean
     animation: AnimationHandler

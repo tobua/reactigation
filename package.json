@@ -14,10 +14,10 @@
   },
   "scripts": {
     "app": "node create-app.js",
-    "build": "esbuild index.tsx --outdir=dist --bundle --minify --format=esm --sourcemap --external:react-native --external:react && npm run build:types",
+    "app:install": "npm i --no-save $(npm pack . | tail -1)  --prefix app",
+    "build": "esbuild index.tsx --outdir=dist --bundle --minify --format=esm --sourcemap --external:react-native --external:react && tsc",
     "watch": "concurrently --kill-others \"npm run build:watch\" \"npm run copy\"",
     "copy": "cpx 'dist/**/*' app/node_modules/reactigation/dist --watch",
-    "build:types": "tsc --project tsconfig-build.json",
     "build:watch": "esbuild index.tsx --watch --outdir=dist --bundle --format=esm --sourcemap --external:react-native --external:react",
     "test": "jest",
     "test:watch": "jest --watchAll",
@@ -114,11 +114,6 @@
       "jsx",
       "json",
       "node"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "module:metro-react-native-babel-preset"
     ]
   }
 }

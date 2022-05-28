@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated } from 'react-native'
 import { act } from 'react-test-renderer'
-import Navigation, { go, back, destroy } from 'reactigation'
+import Navigation, { go, back, destroy, Transition } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 
@@ -231,6 +231,43 @@ test('Warning if unknown transition is used.', () => {
 
   // Restore initial console.
   console.warn = consoleWarn
+
+  destroy()
+})
+
+test('Can use enum or string as transition.', () => {
+  const names = ['FirstScreen']
+  const input = setupScreens(names)
+
+  const { screens } = render(<Navigation />)
+
+  expect(screens.length).toEqual(1)
+
+  act(() => {
+    go(names[0])
+  })
+
+  expect(input[0].mock.calls.length).toBe(3)
+
+  act(() => {
+    go(names[0], 'fast')
+  })
+
+  act(() => {
+    go(names[0], 'peek')
+  })
+
+  expect(input[0].mock.calls.length).toBe(7)
+
+  act(() => {
+    go(names[0], Transition.fast)
+  })
+
+  act(() => {
+    go(names[0], Transition.peek)
+  })
+
+  expect(input[0].mock.calls.length).toBe(11)
 
   destroy()
 })

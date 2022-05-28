@@ -3,7 +3,9 @@ import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
 import startTransition, { initial, connect, isTransitioning } from './transition'
 import animations from './animations'
-import { Animation, Screen, State } from './types'
+import { Transition, Screen, State, TransitionString } from './types'
+
+export { Transition }
 
 // All the registered screens.
 const screens: { [key: string]: Screen } = {}
@@ -41,12 +43,12 @@ export const useCurrentScreen = () => {
 export const register = (
   Component: JSX.Element,
   name: string,
-  configuration: { transition: Animation; background: string } = {
-    transition: 'regular',
+  configuration: { transition: Transition | TransitionString; background: string } = {
+    transition: Transition.regular,
     background: 'white',
   }
 ) => {
-  const { transition = 'regular', background = 'white' } = configuration
+  const { transition = Transition.regular, background = 'white' } = configuration
   const screen: Screen = { Component, transition, background, name }
   if (!name) {
     return console.error(
@@ -66,7 +68,11 @@ export const register = (
 }
 
 // Go to certain screen.
-export const go = (name: string, transition: Animation = 'regular', props?: object) => {
+export const go = (
+  name: string,
+  transition: Transition | TransitionString = Transition.regular,
+  props?: object
+) => {
   if (isTransitioning()) {
     return console.warn('Reactigation: Transition already in progress.')
   }
@@ -89,7 +95,7 @@ export const go = (name: string, transition: Animation = 'regular', props?: obje
 }
 
 // Go back to previous screen.
-export const back = (transition?: Animation) => {
+export const back = (transition?: Transition | TransitionString) => {
   if (isTransitioning()) {
     return console.warn('Reactigation: Transition already in progress.')
   }

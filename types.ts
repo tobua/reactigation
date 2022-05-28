@@ -3,7 +3,7 @@ import { Animated } from 'react-native'
 export type Screen = {
   name: string
   Component: JSX.Element
-  transition: Animation
+  transition: Transition | TransitionString
   background: string
   props?: Object
 }
@@ -18,4 +18,14 @@ export type State = {
   reverse?: boolean
 }
 
-export type Animation = 'regular' | 'slow' | 'fast' | 'none' | 'opacity' | 'modal' | 'peek'
+export enum Transition {
+  regular = 'regular',
+  slow = 'slow',
+  fast = 'fast',
+  none = 'none',
+  opacity = 'opacity',
+  modal = 'modal',
+  peek = 'peek',
+}
+
+export type TransitionString = 'regular' | 'slow' | 'fast' | 'none' | 'opacity' | 'modal' | 'peek'
