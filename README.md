@@ -5,7 +5,8 @@
 
 # Reactigation
 
-[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)(https://codesandbox.io/s/reactigation-c0xeqh)
+[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation)
+[![codesandbox](https://img.shields.io/badge/demo-codesandbox-yellow)](https://codesandbox.io/s/reactigation-c0xeqh)
 
 Navigation for React Native using only JavaScript.
 
