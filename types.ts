@@ -1,21 +1,14 @@
 import { Animated } from 'react-native'
 
-export type Screen = {
-  name: string
-  Component: JSX.Element
-  transition: Transition | TransitionString
-  background: string
-  props?: Object
-}
-
-export type State = {
-  top: Animated.Value
-  left: Animated.Value
-  opacity: Animated.Value
-  backdrop?: boolean
-  Top: Screen
-  Bottom: Screen | null
+export type AnimationHandler = (
+  state: State,
+  done: () => void,
   reverse?: boolean
+) => (() => void) | null
+
+export type Animation = {
+  backdrop?: boolean
+  animation: AnimationHandler
 }
 
 export enum Transition {
@@ -29,3 +22,23 @@ export enum Transition {
 }
 
 export type TransitionString = 'regular' | 'slow' | 'fast' | 'none' | 'opacity' | 'modal' | 'peek'
+
+export type TransitionInput = Transition | TransitionString | Animation
+
+export type Screen = {
+  name: string
+  Component: JSX.Element
+  transition: TransitionInput
+  background: string
+  props?: Object
+}
+
+export type State = {
+  top: Animated.Value
+  left: Animated.Value
+  opacity: Animated.Value
+  backdrop?: boolean
+  Top: Screen
+  Bottom: Screen | null
+  reverse?: boolean
+}

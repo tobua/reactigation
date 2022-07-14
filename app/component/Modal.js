@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native'
-import { go, back } from 'reactigation'
+import { go, back, CustomTransition } from 'reactigation'
 
 const styles = StyleSheet.create({
   modal: {
@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
   },
 })
 
+const AlmostFullPeek = CustomTransition.peek(20)
+
 export const Modal = ({ title }) => (
   <View style={styles.modal}>
     <TouchableOpacity underlayColor="white" style={styles.closeTouchable} onPress={() => back()}>
@@ -44,9 +46,14 @@ export const Modal = ({ title }) => (
     </TouchableOpacity>
     <Text style={styles.title}>{title}</Text>
     {title !== 'PeekModal' && (
-      <TouchableOpacity onPress={() => go('PeekModal', 'peek')}>
-        <Text style={styles.description}>Peek Another Modal</Text>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity onPress={() => go('PeekModal', 'peek')}>
+          <Text style={styles.description}>Peek Another Modal</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => go('PeekModal', AlmostFullPeek)}>
+          <Text style={styles.description}>Peek Further</Text>
+        </TouchableOpacity>
+      </>
     )}
   </View>
 )

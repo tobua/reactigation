@@ -271,3 +271,34 @@ test('Can use enum or string as transition.', () => {
 
   destroy()
 })
+
+test('Only one screen visible in headless mode.', () => {
+  const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
+  const input = setupScreens(names)
+
+  render(<Navigation headless />)
+
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(1)
+
+  act(() => {
+    go(names[1])
+  })
+
+  // Back screen not rendered again.
+  expect(input[0].mock.calls.length).toEqual(1)
+  expect(input[0].effectMock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].effectMock.calls.length).toEqual(1)
+
+  act(() => {
+    go(names[2])
+  })
+
+  expect(input[0].mock.calls.length).toEqual(1)
+  // Second screen appears during both transitions.
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[2].mock.calls.length).toEqual(1)
+
+  destroy()
+})

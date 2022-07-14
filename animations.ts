@@ -1,54 +1,39 @@
 import { Animated, Dimensions, Easing } from 'react-native'
-import { Transition, State } from './types'
+import { Transition, State, Animation } from './types'
 
-const width = Dimensions.get('window').width
-const height = Dimensions.get('window').height
+const windowWidth = Dimensions.get('window').width
+const windowHeight = Dimensions.get('window').height
 
 // Transition finish handler.
 const handlerLeft =
-  (value: Animated.Value, done: () => void, reverse?: boolean, duration = 500) =>
+  (
+    value: Animated.Value,
+    done: () => void,
+    { duration }: { duration: number },
+    reverse?: boolean
+  ) =>
   () => {
     Animated.timing(value, {
-      toValue: reverse ? width : 0,
+      toValue: reverse ? windowWidth : 0,
       easing: Easing.ease,
       useNativeDriver: false,
       duration,
     }).start(done)
   }
 
-const regular = {
+const regular = (duration = 500) => ({
   animation: (state: State, done: () => void, reverse = false) => {
-    state.left.setValue(reverse ? 0 : width)
+    state.left.setValue(reverse ? 0 : windowWidth)
     state.top.setValue(0)
     state.opacity.setValue(1)
 
-    return handlerLeft(state.left, done, reverse)
+    return handlerLeft(state.left, done, { duration }, reverse)
   },
-}
+})
 
-const slow = {
+const none = () => ({
   animation: (state: State, done: () => void, reverse = false) => {
-    state.left.setValue(reverse ? 0 : width)
-    state.top.setValue(0)
-    state.opacity.setValue(1)
-
-    return handlerLeft(state.left, done, reverse, 1000)
-  },
-}
-
-const fast = {
-  animation: (state: State, done: () => void, reverse = false) => {
-    state.left.setValue(reverse ? 0 : width)
-    state.top.setValue(0)
-    state.opacity.setValue(1)
-
-    return handlerLeft(state.left, done, reverse, 250)
-  },
-}
-
-const none = {
-  animation: (state: State, done: () => void, reverse = false) => {
-    state.left.setValue(reverse ? width : 0)
+    state.left.setValue(reverse ? windowWidth : 0)
     state.top.setValue(0)
     state.opacity.setValue(1)
 
@@ -56,10 +41,15 @@ const none = {
 
     return null
   },
-}
+})
 
 const handlerOpacity =
-  (value: Animated.Value, done: () => void, reverse?: boolean, duration = 500) =>
+  (
+    value: Animated.Value,
+    done: () => void,
+    { duration }: { duration: number },
+    reverse?: boolean
+  ) =>
   () => {
     Animated.timing(value, {
       toValue: reverse ? 0 : 1,
@@ -69,7 +59,7 @@ const handlerOpacity =
     }).start(done)
   }
 
-const opacity = {
+const opacity = (duration = 500) => ({
   animation: (state: State, done: () => void, reverse = false) => {
     state.left.setValue(0)
     state.top.setValue(0)
@@ -79,71 +69,81 @@ const opacity = {
       state.opacity,
       () => {
         // Hide screen after opacity animation done.
-        state.left.setValue(reverse ? width : 0)
+        state.left.setValue(reverse ? windowWidth : 0)
         done()
       },
+      { duration },
       reverse
     )
   },
-}
+})
 
 const handlerTop =
-  (value: Animated.Value, done: () => void, reverse?: boolean, duration = 500) =>
+  (
+    value: Animated.Value,
+    done: () => void,
+    { duration }: { duration: number },
+    reverse?: boolean
+  ) =>
   () => {
     Animated.timing(value, {
-      toValue: reverse ? height : 0,
+      toValue: reverse ? windowHeight : 0,
       easing: Easing.ease,
       useNativeDriver: false,
       duration,
     }).start(done)
   }
 
-const modal = {
+const modal = (duration = 500) => ({
   animation: (state: State, done: () => void, reverse = false) => {
     state.left.setValue(0)
-    state.top.setValue(reverse ? 0 : height)
+    state.top.setValue(reverse ? 0 : windowHeight)
     state.opacity.setValue(1)
 
-    return handlerTop(state.top, done, reverse)
+    return handlerTop(state.top, done, { duration }, reverse)
   },
-}
+})
 
 const handlerTopHalf =
-  (value: Animated.Value, done: () => void, reverse?: boolean, duration = 500) =>
+  (
+    value: Animated.Value,
+    done: () => void,
+    { height, duration }: { height: number; duration: number },
+    reverse?: boolean
+  ) =>
   () => {
     Animated.timing(value, {
-      toValue: reverse ? height : height / 2,
+      toValue: reverse ? windowHeight : windowHeight / (100 / height),
       easing: Easing.ease,
       useNativeDriver: false,
       duration,
     }).start(done)
   }
 
-const peek = {
+const peek = (height = 50, duration = 500) => ({
   backdrop: true,
   animation: (state: State, done: () => void, reverse = false) => {
     state.left.setValue(0)
-    state.top.setValue(reverse ? height / 2 : height)
+    state.top.setValue(reverse ? windowHeight / (100 / height) : windowHeight)
     state.opacity.setValue(1)
 
-    return handlerTopHalf(state.top, done, reverse)
+    return handlerTopHalf(state.top, done, { height, duration }, reverse)
   },
-}
-
-type AnimationHandler = (state: State, done: () => void, reverse?: boolean) => (() => void) | null
+})
 
 export default {
+  regular: regular(),
+  slow: regular(1000),
+  fast: regular(250),
+  none: none(),
+  opacity: opacity(),
+  modal: modal(),
+  peek: peek(),
+} as Record<Transition, Animation>
+
+export const CustomTransition = {
   regular,
-  slow,
-  fast,
-  none,
   opacity,
   modal,
   peek,
-} as Record<
-  Transition,
-  {
-    backdrop?: boolean
-    animation: AnimationHandler
-  }
->
+}

@@ -5,7 +5,7 @@
 
 # Reactigation
 
-[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![run in expo snack](https://img.shields.io/badge/Try%20out%20in%20Expo%20Snack-4630EB.svg?style=flat-square&logo=EXPO&labelColor=FFF&logoColor=000)](https://snack.expo.dev/grx2quaU-)
+[![npm](https://img.shields.io/npm/v/reactigation)](https://npmjs.com/reactigation) [![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)(https://codesandbox.io/s/reactigation-c0xeqh)
 
 Navigation for React Native using only JavaScript.
 
@@ -48,7 +48,7 @@ AppRegistry.registerComponent('NavigationApp', () => Reactigation)
 
 At runtime it's possible to navigate to any of the registered screens. A transition is how the switch between two screens looks like. For each navigation the transition can be configured.
 
-`go(screen: string, transition?: string, props?: object)`
+`go(screen: string, transition?: Transition, props?: object)`
 
 ```jsx
 import { go, Transition } from 'reactigation'
@@ -65,19 +65,21 @@ Available transitions: `regular`, `slow`, `fast`, `none`, `opacity`, `modal` & `
 
 Returning to the previous screen is simple. Unless defined otherwise the animation defined by `go` will be applied in reverse. On Android when the user clicks the system back button this function is also called.
 
-`back()`
+`back(transition?: Transition)`
 
 ```jsx
-import { back } from 'reactigation'
+import { back, Transition } from 'reactigation'
 
 back()
+back('fast')
+back(Transition.slow)
 ```
 
 ## Registering Screens
 
 At least one screen needs to be registered before `Reactigation` is initialized. The `register` function takes any React Component (preferably resembling a screen) and a title for the screen which is required. Optionally the default transition for this screen can be set during registration. It is also the possible to register screens after `Reactigation` was rendered.
 
-`register(Component: React.ReactNode, title: string, { transition?: string, background?: string })`
+`register(Component: React.ReactNode, title: string, { transition?: Transition, background?: string })`
 
 ```jsx
 import { register } from 'reactigation'
@@ -131,6 +133,22 @@ export default () => (
 ```
 
 When you need to wrap `<Reactigation />` in a view make sure to add `<View style={{ flex: 1 }}>` in order for the navigation to be visible.
+
+## Custom Transitions
+
+It's possible to configure some variables for the base animations.
+
+```tsx
+import { CustomTransition } from 'reactigation'
+
+const AlmostFullPeek = CustomTransition.peek(20) // 20% backdrop visible.
+const SuperSlow = CustomTransition.regular(5000) // 5 seconds duration.
+const SuperFastOpacity = CustomTransition.opacity(50) // 50 ms duration of opacity blur.
+
+register(<FirstScreen />, 'First', { transition: AlmostFullPeek })
+go('First', SuperSlow)
+back(SuperFastOpacity)
+```
 
 ## Running the Example App
 

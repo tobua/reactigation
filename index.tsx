@@ -1,11 +1,11 @@
 import React, { useState, useEffect, cloneElement } from 'react'
 import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
-import startTransition, { initial, connect, isTransitioning } from './transition'
-import animations from './animations'
-import { Transition, Screen, State, TransitionString } from './types'
+import startTransition, { initial, connect, isTransitioning, isTransitionValid } from './transition'
+import { CustomTransition } from './animations'
+import { Transition, Screen, State, TransitionInput } from './types'
 
-export { Transition }
+export { Transition, CustomTransition }
 
 // All the registered screens.
 const screens: { [key: string]: Screen } = {}
@@ -43,7 +43,7 @@ export const useCurrentScreen = () => {
 export const register = (
   Component: JSX.Element,
   name: string,
-  configuration: { transition: Transition | TransitionString; background: string } = {
+  configuration: { transition?: TransitionInput; background?: string } = {
     transition: Transition.regular,
     background: 'white',
   }
@@ -55,10 +55,8 @@ export const register = (
       'Reactigation: Trying to register a Component without a name as the second argument.'
     )
   }
-  if (!(transition in animations)) {
-    return console.warn(
-      `Reactigation: Unknown transition ${transition} used when calling register().`
-    )
+  if (!isTransitionValid(transition, 'register')) {
+    return
   }
   // First registered screen will initially be shown.
   if (!history.length) {
@@ -70,7 +68,7 @@ export const register = (
 // Go to certain screen.
 export const go = (
   name: string,
-  transition: Transition | TransitionString = Transition.regular,
+  transition: TransitionInput = Transition.regular,
   props?: object
 ) => {
   if (isTransitioning()) {
@@ -80,8 +78,8 @@ export const go = (
   if (!currentScreen) {
     return console.warn(`Reactigation: Screen ${name} wasn't registered.`)
   }
-  if (!(transition in animations)) {
-    return console.warn(`Reactigation: Unknown transition ${transition} used when calling go().`)
+  if (!isTransitionValid(transition, 'go')) {
+    return
   }
   const previousScreen = history[history.length - 1]
   // Make a copy to reuse transition when going back.
@@ -95,15 +93,16 @@ export const go = (
 }
 
 // Go back to previous screen.
-export const back = (transition?: Transition | TransitionString) => {
+export const back = (transition?: TransitionInput) => {
   if (isTransitioning()) {
     return console.warn('Reactigation: Transition already in progress.')
   }
   if (history.length === 1) {
     return console.warn('Reactigation: Only one screen left, cannot go back.')
   }
-  if (transition && !(transition in animations)) {
-    return console.warn(`Reactigation: Unknown transition ${transition} used when calling back().`)
+
+  if (transition && !isTransitionValid(transition, 'back')) {
+    return
   }
 
   const lastScreen = history.pop() as Screen
@@ -182,14 +181,14 @@ const renderTop = ({ Top, reverse, left, top, opacity, backdrop }: State) => {
   return screen
 }
 
-export default () => {
+export default ({ headless = false }) => {
   const [state, setState] = useState<State>(initial(history[0]))
-  const afterRender = connect({ setState, state })
+  const afterRender = connect({ setState, state }, headless)
 
   useEffect(afterRender, [afterRender])
 
   const Top = renderTop(state)
-  const Bottom = renderBottom(state)
+  const Bottom = !headless && renderBottom(state)
 
   return <View style={styles.stretch}>{[Bottom, Top]}</View>
 }
