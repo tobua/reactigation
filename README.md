@@ -80,7 +80,7 @@ back(Transition.slow)
 
 At least one screen needs to be registered before `Reactigation` is initialized. The `register` function takes any React Component (preferably resembling a screen) and a title for the screen which is required. Optionally the default transition for this screen can be set during registration. It is also the possible to register screens after `Reactigation` was rendered.
 
-`register(Component: React.ReactNode, title: string, { transition?: Transition, background?: string })`
+`register(Component: React.ReactNode, title: string, { transition?: Transition, background?: string, initial?: boolean })`
 
 ```jsx
 import { register } from 'reactigation'
@@ -96,6 +96,20 @@ register(screen, 'HelloModal', {
   transition: 'modal',
   background: 'transparent',
 })
+```
+
+## Configuring the Initial Screen
+
+By default the first registered screen will appear initially. To use another screen initially, pass the `initial` option as the third argument to register or call `initial()` with the name of a previously registered screen.
+
+```js
+import { register, initial } from 'reactigation'
+
+register(screen, 'FirstScreen')
+register(screen, 'SecondScreen', { initial: true })
+register(screen, 'ThirdScreen')
+
+initial('SecondScreen')
 ```
 
 ## Accessing the Current Screen

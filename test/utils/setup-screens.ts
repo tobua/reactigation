@@ -2,13 +2,22 @@
 import { register } from 'reactigation'
 import createTestScreen from '../components/Screen'
 
-export default (names: string[]) => {
-  return names.map((name) => {
+export default (screens: (string | { name: string; options?: { initial?: boolean } })[]) => {
+  return screens.map((screen) => {
+    let name
+    let options = {}
+
+    if (typeof screen === 'string') {
+      name = screen
+    } else {
+      name = screen.name
+      options = screen.options
+    }
     const mock = jest.fn()
     const effectMock = jest.fn()
     const component = createTestScreen(name, mock, effectMock)
 
-    register(component, name)
+    register(component, name, options)
 
     return {
       mock: mock.mock,

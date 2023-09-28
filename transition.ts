@@ -9,7 +9,7 @@ let options = { headless: false }
 // Connects to Reactigation Component's setState.
 export const connect = (
   current: { setState: (state: State) => void; state: State },
-  headless: boolean
+  headless: boolean,
 ) => {
   state = current.state
   setState = current.setState
@@ -19,7 +19,7 @@ export const connect = (
 }
 
 // Sets initial screen and values.
-export const initial: (Top: Screen) => State = (Top) => ({
+export const initialPosition: (Top: Screen) => State = (Top) => ({
   Top,
   Bottom: null,
   left: new Animated.Value(0),
@@ -49,7 +49,7 @@ export default (
   Top: Screen,
   Bottom: Screen,
   animation: TransitionInput = Transition.regular,
-  reverse = false
+  reverse = false,
 ) => {
   const transition = typeof animation === 'string' ? animations[animation] : animation
   running = true

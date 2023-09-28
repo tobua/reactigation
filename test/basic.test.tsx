@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated } from 'react-native'
 import { act } from 'react-test-renderer'
-import Navigation, { go, back, destroy, Transition } from 'reactigation'
+import Navigation, { go, back, destroy, Transition, initial } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 
@@ -299,6 +299,48 @@ test('Only one screen visible in headless mode.', () => {
   // Second screen appears during both transitions.
   expect(input[1].mock.calls.length).toEqual(1)
   expect(input[2].mock.calls.length).toEqual(1)
+
+  destroy()
+})
+
+test('Initially shown screen can be configured.', () => {
+  const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
+  const input = setupScreens(names)
+
+  initial('SecondScreen')
+
+  const { screens } = render(<Navigation />)
+
+  expect(screens.length).toEqual(1)
+
+  expect(input[0].mock.calls.length).toEqual(0)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].effectMock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].mock.calls[0][1]).toEqual('SecondScreen')
+  expect(input[2].mock.calls.length).toEqual(0)
+
+  destroy()
+})
+
+test('Initially shown screen can be configured though register.', () => {
+  const names = [
+    { name: 'FirstScreen' },
+    { name: 'SecondScreen', options: { initial: true } },
+    { name: 'ThirdScreen' },
+  ]
+  const input = setupScreens(names)
+
+  const { screens } = render(<Navigation />)
+
+  expect(screens.length).toEqual(1)
+
+  expect(input[0].mock.calls.length).toEqual(0)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].effectMock.calls.length).toEqual(1)
+  expect(input[1].mock.calls.length).toEqual(1)
+  expect(input[1].mock.calls[0][1]).toEqual('SecondScreen')
+  expect(input[2].mock.calls.length).toEqual(0)
 
   destroy()
 })

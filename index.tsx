@@ -1,7 +1,12 @@
 import React, { useState, useEffect, cloneElement } from 'react'
 import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
-import startTransition, { initial, connect, isTransitioning, isTransitionValid } from './transition'
+import startTransition, {
+  initialPosition,
+  connect,
+  isTransitioning,
+  isTransitionValid,
+} from './transition'
 import { CustomTransition } from './animations'
 import { Transition, Screen, State, TransitionInput } from './types'
 
@@ -27,7 +32,7 @@ export const useCurrentScreen = () => {
     // Clear up old listeners.
     return () => {
       const index = currentScreenHookListeners.findIndex(
-        (listener) => listener === setCurrentScreen
+        (listener) => listener === setCurrentScreen,
       )
 
       if (index !== -1) {
@@ -43,16 +48,17 @@ export const useCurrentScreen = () => {
 export const register = (
   Component: JSX.Element,
   name: string,
-  configuration: { transition?: TransitionInput; background?: string } = {
+  configuration: { transition?: TransitionInput; background?: string; initial?: boolean } = {
     transition: Transition.regular,
     background: 'white',
-  }
+    initial: false,
+  },
 ) => {
-  const { transition = Transition.regular, background = 'white' } = configuration
+  const { transition = Transition.regular, background = 'white', initial } = configuration
   const screen: Screen = { Component, transition, background, name }
   if (!name) {
     return console.error(
-      'Reactigation: Trying to register a Component without a name as the second argument.'
+      'Reactigation: Trying to register a Component without a name as the second argument.',
     )
   }
   if (!isTransitionValid(transition, 'register')) {
@@ -62,14 +68,33 @@ export const register = (
   if (!history.length) {
     history.push(screen)
   }
+  if (initial) {
+    history[0] = screen
+  }
   screens[name] = screen
+}
+
+export const initial = (name: string) => {
+  if (!screens[name]) {
+    return console.warn(
+      `Reactigation: Trying to set initial screen "${name}" which hasn't been registered yet.`,
+    )
+  }
+
+  if (history.length === 0) {
+    return console.error(
+      `Reactigation: Trying to set initial screen before any screens have been registered.`,
+    )
+  }
+
+  history[0] = screens[name]
 }
 
 // Go to certain screen.
 export const go = (
   name: string,
   transition: TransitionInput = Transition.regular,
-  props?: object
+  props?: object,
 ) => {
   if (isTransitioning()) {
     return console.warn('Reactigation: Transition already in progress.')
@@ -182,7 +207,7 @@ const renderTop = ({ Top, reverse, left, top, opacity, backdrop }: State) => {
 }
 
 export default ({ headless = false }) => {
-  const [state, setState] = useState<State>(initial(history[0]))
+  const [state, setState] = useState<State>(initialPosition(history[0]))
   const afterRender = connect({ setState, state }, headless)
 
   useEffect(afterRender, [afterRender])
