@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react'
 import { View, Text } from 'react-native'
 
-const Screen = ({
+export const Screen = ({
   renderMock,
   effectMock,
   ...props

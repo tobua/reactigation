@@ -18,10 +18,10 @@
   "scripts": {
     "app": "node create-app.js",
     "app:install": "npm i --no-save $(npm pack . | tail -1)  --prefix app",
-    "build": "esbuild index.tsx --outdir=dist --bundle --minify --format=esm --sourcemap --external:react-native --external:react && tsc",
+    "build": "esbuild index.tsx --outdir=dist --bundle --minify --format=esm --platform=neutral --sourcemap --external:react-native --external:react && tsc",
     "watch": "npm-run-all --parallel build:watch copy",
     "copy": "cpx 'dist/**/*' app/node_modules/reactigation/dist --watch",
-    "build:watch": "esbuild index.tsx --watch --outdir=dist --bundle --format=esm --sourcemap --external:react-native --external:react",
+    "build:watch": "esbuild index.tsx --watch --outdir=dist --bundle --format=esm --platform=neutral --sourcemap --external:react-native --external:react",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "lint": "eslint . --fix --ext .js,.jsx,.ts,.tsx",

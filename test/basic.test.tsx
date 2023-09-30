@@ -1,9 +1,10 @@
 import React from 'react'
-import { Animated } from 'react-native'
+import { Animated, Text } from 'react-native'
 import { act } from 'react-test-renderer'
 import Navigation, { go, back, destroy, Transition, initial } from 'reactigation'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
+import { Screen } from './components/Screen'
 
 // @ts-ignore Animated won't work in test enviroment, mock it to resolve immediately.
 Animated.timing = () => ({
@@ -276,7 +277,11 @@ test('Only one screen visible in headless mode.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  render(<Navigation headless />)
+  const { root } = render(<Navigation headless />)
+
+  let screens = root.findAllByType(Screen)
+
+  expect(screens.length).toBe(1)
 
   expect(input[0].mock.calls.length).toEqual(1)
   expect(input[0].effectMock.calls.length).toEqual(1)
@@ -284,6 +289,15 @@ test('Only one screen visible in headless mode.', () => {
   act(() => {
     go(names[1])
   })
+
+  screens = root.findAllByType(Screen)
+  const texts = root.findAllByType(Text)
+  expect(texts.length).toBe(1)
+  // @ts-ignore
+  const title = texts[0]._fiber.child
+  expect(title.pendingProps.children).toEqual('SecondScreen')
+
+  expect(screens.length).toBe(1)
 
   // Back screen not rendered again.
   expect(input[0].mock.calls.length).toEqual(1)
@@ -294,6 +308,10 @@ test('Only one screen visible in headless mode.', () => {
   act(() => {
     go(names[2])
   })
+
+  screens = root.findAllByType(Screen)
+
+  expect(screens.length).toBe(1)
 
   expect(input[0].mock.calls.length).toEqual(1)
   // Second screen appears during both transitions.

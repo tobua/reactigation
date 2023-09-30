@@ -1,8 +1,8 @@
 /* eslint-env jest */
-import renderer, { act } from 'react-test-renderer'
+import renderer, { ReactTestRenderer, act } from 'react-test-renderer'
 
 export default (Navigation: JSX.Element) => {
-  let rendered
+  let rendered: ReactTestRenderer = null
   // act to ensure effects are flushed in initial render.
   act(() => {
     rendered = renderer.create(Navigation)
@@ -14,14 +14,15 @@ export default (Navigation: JSX.Element) => {
   if (Array.isArray(tree)) {
     expect(tree[0].type).toEqual('View')
   } else {
-    expect(tree.type).toEqual('View')
+    expect(tree?.type).toEqual('View')
   }
 
-  const screensRoot = Array.isArray(tree) ? tree[0] : tree
+  const screensRoot: any = Array.isArray(tree) ? tree[0] : tree
 
   expect(screensRoot.children.length > 0).toEqual(true)
 
   return {
+    root: rendered.root,
     tree,
     wrapper: screensRoot,
     wrappers: screensRoot.children,
