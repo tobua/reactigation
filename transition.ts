@@ -21,7 +21,7 @@ export const connect = (
 // Sets initial screen and values.
 export const initialPosition: (Top: Screen) => State = (Top) => ({
   Top,
-  Bottom: null,
+  Bottom: undefined,
   left: new Animated.Value(0),
   top: new Animated.Value(0),
   opacity: new Animated.Value(1),
@@ -47,11 +47,12 @@ export const isTransitionValid = (transition: TransitionInput, method: string) =
 
 export default (
   Top: Screen,
-  Bottom: Screen,
+  Bottom: Screen | undefined,
   animation: TransitionInput = Transition.regular,
   reverse = false,
 ) => {
-  const transition = typeof animation === 'string' ? animations[animation] : animation
+  let transition = typeof animation === 'string' ? animations[animation] : animation
+
   running = true
   const done = () => {
     running = false
@@ -71,8 +72,9 @@ export default (
     state.top.setValue(0)
     running = false
 
-    if (reverse) {
+    if (reverse && Bottom) {
       Top = Bottom
+      Bottom = undefined
     }
   }
 

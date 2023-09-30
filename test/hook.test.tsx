@@ -21,9 +21,9 @@ test('Hook is called with initial screen.', () => {
 
   const { tree, wrappers } = render(
     <>
-      <Navigation />
+      <Navigation headless={false} />
       <Hook currentScreenMock={hookMock} />
-    </>
+    </>,
   )
 
   expect(wrappers.length).toEqual(1)
@@ -43,9 +43,9 @@ test('Hook is called with first registered screen.', () => {
 
   render(
     <>
-      <Navigation />
+      <Navigation headless={false} />
       <Hook currentScreenMock={hookMock} />
-    </>
+    </>,
   )
 
   expect(hookMock.mock.calls[0][0]).toEqual('SecondScreen')
@@ -60,9 +60,9 @@ test('Hook is updated when screen changes.', () => {
 
   render(
     <>
-      <Navigation />
+      <Navigation headless={false} />
       <Hook currentScreenMock={hookMock} />
-    </>
+    </>,
   )
 
   expect(hookMock.mock.calls[0][0]).toEqual(names[0])
@@ -99,10 +99,10 @@ test('Hook updates all listeners.', () => {
 
   render(
     <>
-      <Navigation />
+      <Navigation headless={false} />
       <Hook currentScreenMock={hookMock} />
       <Hook currentScreenMock={secondHookMock} />
-    </>
+    </>,
   )
 
   expect(hookMock.mock.calls[0][0]).toEqual(names[0])

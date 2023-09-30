@@ -43,7 +43,7 @@ test('Two Screen Example with Interaction.', () => {
   register(<FirstScreen />, 'First')
   register(<SecondScreen />, 'Second')
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 

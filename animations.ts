@@ -10,7 +10,7 @@ const handlerLeft =
     value: Animated.Value,
     done: () => void,
     { duration }: { duration: number },
-    reverse?: boolean
+    reverse?: boolean,
   ) =>
   () => {
     Animated.timing(value, {
@@ -48,7 +48,7 @@ const handlerOpacity =
     value: Animated.Value,
     done: () => void,
     { duration }: { duration: number },
-    reverse?: boolean
+    reverse?: boolean,
   ) =>
   () => {
     Animated.timing(value, {
@@ -73,7 +73,7 @@ const opacity = (duration = 500) => ({
         done()
       },
       { duration },
-      reverse
+      reverse,
     )
   },
 })
@@ -83,7 +83,7 @@ const handlerTop =
     value: Animated.Value,
     done: () => void,
     { duration }: { duration: number },
-    reverse?: boolean
+    reverse?: boolean,
   ) =>
   () => {
     Animated.timing(value, {
@@ -109,7 +109,7 @@ const handlerTopHalf =
     value: Animated.Value,
     done: () => void,
     { height, duration }: { height: number; duration: number },
-    reverse?: boolean
+    reverse?: boolean,
   ) =>
   () => {
     Animated.timing(value, {

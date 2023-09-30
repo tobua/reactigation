@@ -18,7 +18,7 @@ test('Renders a single registered screen.', () => {
   const names = ['FirstScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -40,7 +40,7 @@ test('Can render several screens.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -58,7 +58,7 @@ test('Can navigate between screens.', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  render(<Navigation />)
+  render(<Navigation headless={false} />)
 
   expect(input[0].mock.calls.length).toEqual(1)
   expect(input[0].effectMock.calls.length).toEqual(1)
@@ -88,7 +88,7 @@ test("Back isn't possible for last screen.", () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  render(<Navigation />)
+  render(<Navigation headless={false} />)
 
   // Visible screens have been rendered, back initially not possible.
   expect(input[0].mock.calls.length).toEqual(1)
@@ -144,7 +144,7 @@ test('Props can be passed to screen with go().', () => {
   const names = ['FirstScreen', 'SecondScreen', 'ThirdScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -205,7 +205,7 @@ test('Warning if unknown transition is used.', () => {
   const names = ['FirstScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -239,7 +239,7 @@ test('Can use enum or string as transition.', () => {
   const names = ['FirstScreen']
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -309,7 +309,7 @@ test('Initially shown screen can be configured.', () => {
 
   initial('SecondScreen')
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 
@@ -331,7 +331,7 @@ test('Initially shown screen can be configured though register.', () => {
   ]
   const input = setupScreens(names)
 
-  const { screens } = render(<Navigation />)
+  const { screens } = render(<Navigation headless={false} />)
 
   expect(screens.length).toEqual(1)
 

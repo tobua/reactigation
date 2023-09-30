@@ -3,7 +3,7 @@ import { Animated } from 'react-native'
 export type AnimationHandler = (
   state: State,
   done: () => void,
-  reverse?: boolean
+  reverse?: boolean,
 ) => (() => void) | null
 
 export type Animation = {
@@ -39,6 +39,6 @@ export type State = {
   opacity: Animated.Value
   backdrop?: boolean
   Top: Screen
-  Bottom: Screen | null
+  Bottom?: Screen
   reverse?: boolean
 }

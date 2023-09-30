@@ -91,17 +91,16 @@ export const initial = (name: string) => {
 }
 
 // Go to certain screen.
-export const go = (
-  name: string,
-  transition: TransitionInput = Transition.regular,
-  props?: object,
-) => {
+export const go = (name: string, transition?: TransitionInput, props?: object) => {
   if (isTransitioning()) {
     return console.warn('Reactigation: Transition already in progress.')
   }
   const currentScreen = screens[name]
   if (!currentScreen) {
     return console.warn(`Reactigation: Screen ${name} wasn't registered.`)
+  }
+  if (!transition) {
+    transition = currentScreen.transition ?? Transition.regular
   }
   if (!isTransitionValid(transition, 'go')) {
     return
@@ -155,7 +154,7 @@ BackHandler.addEventListener('hardwareBackPress', () => {
   return true
 })
 
-const renderBottom = ({ Bottom }: { Bottom: Screen | null }) => {
+const renderBottom = ({ Bottom }: State) => {
   if (!Bottom) {
     return
   }
@@ -176,9 +175,9 @@ const renderBottom = ({ Bottom }: { Bottom: Screen | null }) => {
   )
 }
 
-const renderTop = ({ Top, reverse, left, top, opacity, backdrop }: State) => {
+const renderTop = ({ Top, Bottom, reverse, left, top, opacity, backdrop }: State) => {
   const TopWithProps = cloneElement(Top.Component, {
-    backPossible: history.length > 1 || !!reverse,
+    backPossible: history.length > 1 || (!!reverse && Bottom === history[0]),
     title: Top.name,
     ...Top.props,
   })
@@ -206,7 +205,8 @@ const renderTop = ({ Top, reverse, left, top, opacity, backdrop }: State) => {
   return screen
 }
 
-export default ({ headless = false }) => {
+// Disable transitions and render only top screen, useful for programmatic tests.
+export default ({ headless = process.env.NODE_ENV === 'test' }) => {
   const [state, setState] = useState<State>(initialPosition(history[0]))
   const afterRender = connect({ setState, state }, headless)
 

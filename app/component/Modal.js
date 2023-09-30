@@ -47,7 +47,7 @@ export const Modal = ({ title }) => (
     <Text style={styles.title}>{title}</Text>
     {title !== 'PeekModal' && (
       <>
-        <TouchableOpacity onPress={() => go('PeekModal', 'peek')}>
+        <TouchableOpacity onPress={() => go('PeekModal')}>
           <Text style={styles.description}>Peek Another Modal</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => go('PeekModal', AlmostFullPeek)}>

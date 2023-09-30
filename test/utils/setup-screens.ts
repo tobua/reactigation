@@ -5,7 +5,7 @@ import createTestScreen from '../components/Screen'
 export default (screens: (string | { name: string; options?: { initial?: boolean } })[]) => {
   return screens.map((screen) => {
     let name
-    let options = {}
+    let options = {} as any
 
     if (typeof screen === 'string') {
       name = screen

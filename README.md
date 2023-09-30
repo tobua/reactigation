@@ -165,6 +165,17 @@ go('First', SuperSlow)
 back(SuperFastOpacity)
 ```
 
+## Headless Mode for Testing
+
+Headless mode will automatically be enabled in a testing environment `process.env.NODE === 'test'`. It's also possible to control this mode manually on the main component.
+
+```jsx
+import Reactigation from 'reactigation'
+
+const App = () => <Reactigation headless={false} />
+AppRegistry.registerComponent('NavigationApp', () => App)
+```
+
 ## Running the Example App
 
 The example app shown on top is found in the repository. Run it by cloning this repository and then executing the following commands inside the main directory.
