@@ -14,7 +14,7 @@ execSync(`npx react-native init ${appName}`, {
 })
 
 cpSync('app/component', `${appName}/component`, { recursive: true })
-cpSync('app/index.js', `${appName}/index.js`)
+cpSync('app/App.tsx', `${appName}/App.tsx`)
 cpSync('app/logo.png', `${appName}/logo.png`)
 
 rmSync('app', { recursive: true })

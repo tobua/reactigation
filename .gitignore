@@ -3,7 +3,7 @@ package-lock.json
 dist
 ReactigationApp
 app/**/*
-!app/index.js
+!app/App.tsx
 !app/logo.png
 !app/component
 !app/component/*

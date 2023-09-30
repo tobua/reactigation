@@ -1,7 +1,5 @@
 import React from 'react'
-import { AppRegistry } from 'react-native'
 import Reactigation, { register, Transition } from 'reactigation'
-import { name as appName } from './app.json'
 import { Static } from './component/Static'
 import { Screen } from './component/Screen'
 import { Modal } from './component/Modal'
@@ -33,14 +31,12 @@ Object.entries(Screens).map(([name, configuration]) =>
   register(configuration.component, name, {
     transition: configuration.transition,
     background: configuration.background,
-  })
+  }),
 )
 
-const App = () => (
+export default () => (
   <>
     <Reactigation />
     <Static />
   </>
 )
-
-AppRegistry.registerComponent(appName, () => App)
