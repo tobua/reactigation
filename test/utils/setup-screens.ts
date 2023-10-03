@@ -2,7 +2,9 @@
 import { register } from 'reactigation'
 import createTestScreen from '../components/Screen'
 
-export default (screens: (string | { name: string; options?: { initial?: boolean } })[]) => {
+export default (
+  screens: (string | { name: string; options?: { initial?: boolean; background?: string } })[],
+) => {
   return screens.map((screen) => {
     let name
     let options = {} as any

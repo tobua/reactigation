@@ -362,3 +362,43 @@ test('Initially shown screen can be configured though register.', () => {
 
   destroy()
 })
+
+test('Background of screen can be configured initially and with go().', () => {
+  const names = [
+    { name: 'FirstScreen' },
+    { name: 'SecondScreen', options: { background: 'red' } },
+    { name: 'ThirdScreen', options: { background: 'blue', transition: Transition.peek } },
+  ]
+  setupScreens(names)
+
+  const { root } = render(<Navigation headless={false} />)
+
+  let screen = root.findAllByType(Animated.View)
+  let top = screen[0]
+
+  expect(top.props.style[1].backgroundColor).toBe('white')
+
+  act(() => {
+    go(names[1].name)
+  })
+
+  screen = root.findAllByType(Animated.View)
+  top = screen[1]
+
+  // @ts-ignore
+  expect(top._fiber.key).toEqual('SecondScreen_top')
+  expect(top.props.style[1].backgroundColor).toBe('red')
+
+  act(() => {
+    go(names[2].name)
+  })
+
+  screen = root.findAllByType(Animated.View)
+  top = screen[2] // TouchableOpacity adds another Animated.View
+
+  // @ts-ignore
+  expect(top._fiber.key).toEqual('ThirdScreen_top')
+  expect(top.props.style[1].backgroundColor).toBe('blue')
+
+  destroy()
+})
