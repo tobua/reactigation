@@ -1,4 +1,4 @@
-import { Animated } from 'react-native'
+import type { Animated } from 'react-native'
 
 export type AnimationHandler = (
   state: State,

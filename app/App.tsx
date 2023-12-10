@@ -31,7 +31,7 @@ Object.entries(Screens).map(([name, configuration]) =>
   register(configuration.component, name, {
     transition: configuration.transition,
     background: configuration.background,
-  }),
+  })
 )
 
 export default () => (

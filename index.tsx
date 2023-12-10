@@ -83,7 +83,7 @@ export const initial = (name: string) => {
 
   if (history.length === 0) {
     return console.error(
-      `Reactigation: Trying to set initial screen before any screens have been registered.`,
+      'Reactigation: Trying to set initial screen before any screens have been registered.',
     )
   }
 

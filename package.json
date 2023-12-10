@@ -18,7 +18,7 @@
   "scripts": {
     "app": "node create-app.js",
     "app:install": "npm i --no-save $(npm pack . | tail -1)  --prefix app",
-    "build": "esbuild index.tsx --outdir=dist --bundle --minify --format=esm --platform=neutral --sourcemap --external:react-native --external:react && tsc",
+    "build": "esbuild index.tsx --outdir=dist --bundle --format=esm --platform=neutral --sourcemap --external:react-native --external:react && tsc",
     "watch": "npm-run-all --parallel build:watch copy",
     "copy": "cpx 'dist/**/*' app/node_modules/reactigation/dist --watch",
     "build:watch": "esbuild index.tsx --watch --outdir=dist --bundle --format=esm --platform=neutral --sourcemap --external:react-native --external:react",
@@ -32,26 +32,28 @@
     "react-native": ">= 0.70"
   },
   "devDependencies": {
-    "@react-native/eslint-config": "^0.73.1",
-    "@types/jest": "^29.5.5",
-    "@types/react": "^18.2.23",
-    "@types/react-native": "^0.72.3",
-    "@types/react-test-renderer": "^18.0.3",
-    "@typescript-eslint/eslint-plugin": "^6.7.3",
-    "@typescript-eslint/parser": "^6.7.3",
+    "@react-native-community/cli": "^13.0.0",
+    "@react-native/babel-preset": "^0.74.0",
+    "@react-native/eslint-config": "^0.74.0",
+    "@react-native/typescript-config": "^0.74.0",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.4",
+    "@types/react": "^18.2.43",
+    "@types/react-native": "^0.72.8",
+    "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
     "cpx": "^1.5.0",
-    "esbuild": "^0.19.4",
-    "eslint": "^8.50.0",
+    "esbuild": "^0.19.9",
+    "eslint": "^8.55.0",
     "eslint-plugin-flowtype": "^8.0.3",
+    "eslint-plugin-prettier": "^5.0.1",
     "jest": "^29.7.0",
-    "metro-react-native-babel-preset": "^0.77.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.1",
     "react": "^18.2.0",
-    "react-native": "^0.72.5",
+    "react-native": "^0.73.0",
     "react-test-renderer": "^18.2.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   },
   "files": [
     "dist"
@@ -70,10 +72,6 @@
     "ignorePatterns": [
       "dist",
       "app"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
     ]
   },
   "prettier": {

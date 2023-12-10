@@ -8,7 +8,7 @@ const appName = 'ReactigationApp'
 
 console.log('⌛ Initializing a fresh RN project...')
 
-execSync(`npx react-native init ${appName}`, {
+execSync(`npx react-native init ${appName} --skip-git-init true --install-pods true`, {
   // Write output to cnosole.
   stdio: 'inherit',
 })
@@ -20,6 +20,11 @@ cpSync('app/logo.png', `${appName}/logo.png`)
 rmSync('app', { recursive: true })
 
 renameSync(appName, 'app')
+
+// Run build to ensure distributed files for plugin exist.
+execSync('npm run build', {
+  stdio: 'inherit',
+})
 
 // Install this package locally, avoiding symlinks.
 execSync('npm install $(npm pack .. | tail -1) --legacy-peer-deps', {

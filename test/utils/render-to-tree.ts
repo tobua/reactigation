@@ -2,7 +2,7 @@
 import renderer, { ReactTestRenderer, act } from 'react-test-renderer'
 
 export default (Navigation: JSX.Element) => {
-  let rendered: ReactTestRenderer = null
+  let rendered: ReactTestRenderer | null = null
   // act to ensure effects are flushed in initial render.
   act(() => {
     rendered = renderer.create(Navigation)
@@ -22,7 +22,7 @@ export default (Navigation: JSX.Element) => {
   expect(screensRoot.children.length > 0).toEqual(true)
 
   return {
-    root: rendered.root,
+    root: (rendered as unknown as ReactTestRenderer).root,
     tree,
     wrapper: screensRoot,
     wrappers: screensRoot.children,
