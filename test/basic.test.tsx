@@ -342,11 +342,7 @@ test('Initially shown screen can be configured.', () => {
 })
 
 test('Initially shown screen can be configured though register.', () => {
-  const names = [
-    { name: 'FirstScreen' },
-    { name: 'SecondScreen', options: { initial: true } },
-    { name: 'ThirdScreen' },
-  ]
+  const names = [{ name: 'FirstScreen' }, { name: 'SecondScreen', options: { initial: true } }, { name: 'ThirdScreen' }]
   const input = setupScreens(names)
 
   const { screens } = render(<Navigation headless={false} />)

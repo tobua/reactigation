@@ -7,10 +7,7 @@ let afterRender = () => {}
 let options = { headless: false }
 
 // Connects to Reactigation Component's setState.
-export const connect = (
-  current: { setState: (state: State) => void; state: State },
-  headless: boolean,
-) => {
+export const connect = (current: { setState: (state: State) => void; state: State }, headless: boolean) => {
   state = current.state
   setState = current.setState
   options.headless = headless
@@ -62,9 +59,7 @@ export default (
   }
 
   // After state is set and new screens rendered, calling this handler starts the animation.
-  afterRender = options.headless
-    ? () => {}
-    : transition.animation(state, done, reverse) || (() => {})
+  afterRender = options.headless ? () => {} : transition.animation(state, done, reverse) || (() => {})
 
   // Skip animation.
   if (options.headless) {

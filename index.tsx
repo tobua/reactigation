@@ -1,12 +1,7 @@
 import React, { useState, useEffect, cloneElement } from 'react'
 import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
-import startTransition, {
-  initialPosition,
-  connect,
-  isTransitioning,
-  isTransitionValid,
-} from './transition'
+import startTransition, { initialPosition, connect, isTransitioning, isTransitionValid } from './transition'
 import { CustomTransition } from './animations'
 import { Transition, Screen, State, TransitionInput } from './types'
 
@@ -31,9 +26,7 @@ export const useCurrentScreen = () => {
 
     // Clear up old listeners.
     return () => {
-      const index = currentScreenHookListeners.findIndex(
-        (listener) => listener === setCurrentScreen,
-      )
+      const index = currentScreenHookListeners.findIndex((listener) => listener === setCurrentScreen)
 
       if (index !== -1) {
         currentScreenHookListeners.splice(index, 1)
@@ -57,9 +50,7 @@ export const register = (
   const { transition = Transition.regular, background = 'white', initial } = configuration
   const screen: Screen = { Component, transition, background, name }
   if (!name) {
-    return console.error(
-      'Reactigation: Trying to register a Component without a name as the second argument.',
-    )
+    return console.error('Reactigation: Trying to register a Component without a name as the second argument.')
   }
   if (!isTransitionValid(transition, 'register')) {
     return
@@ -76,15 +67,11 @@ export const register = (
 
 export const initial = (name: string) => {
   if (!screens[name]) {
-    return console.warn(
-      `Reactigation: Trying to set initial screen "${name}" which hasn't been registered yet.`,
-    )
+    return console.warn(`Reactigation: Trying to set initial screen "${name}" which hasn't been registered yet.`)
   }
 
   if (history.length === 0) {
-    return console.error(
-      'Reactigation: Trying to set initial screen before any screens have been registered.',
-    )
+    return console.error('Reactigation: Trying to set initial screen before any screens have been registered.')
   }
 
   history[0] = screens[name]
@@ -166,10 +153,7 @@ const renderBottom = ({ Bottom }: State) => {
   })
 
   return (
-    <Animated.View
-      key={`${Bottom.name}_bottom`}
-      style={[styles.back, { backgroundColor: Bottom.background }]}
-    >
+    <Animated.View key={`${Bottom.name}_bottom`} style={[styles.back, { backgroundColor: Bottom.background }]}>
       {BottomWithProps}
     </Animated.View>
   )

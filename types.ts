@@ -1,10 +1,6 @@
 import type { Animated } from 'react-native'
 
-export type AnimationHandler = (
-  state: State,
-  done: () => void,
-  reverse?: boolean,
-) => (() => void) | null
+export type AnimationHandler = (state: State, done: () => void, reverse?: boolean) => (() => void) | null
 
 export type Animation = {
   backdrop?: boolean

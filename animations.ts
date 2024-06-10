@@ -6,12 +6,7 @@ const windowHeight = Dimensions.get('window').height
 
 // Transition finish handler.
 const handlerLeft =
-  (
-    value: Animated.Value,
-    done: () => void,
-    { duration }: { duration: number },
-    reverse?: boolean,
-  ) =>
+  (value: Animated.Value, done: () => void, { duration }: { duration: number }, reverse?: boolean) =>
   () => {
     Animated.timing(value, {
       toValue: reverse ? windowWidth : 0,
@@ -44,12 +39,7 @@ const none = () => ({
 })
 
 const handlerOpacity =
-  (
-    value: Animated.Value,
-    done: () => void,
-    { duration }: { duration: number },
-    reverse?: boolean,
-  ) =>
+  (value: Animated.Value, done: () => void, { duration }: { duration: number }, reverse?: boolean) =>
   () => {
     Animated.timing(value, {
       toValue: reverse ? 0 : 1,
@@ -79,12 +69,7 @@ const opacity = (duration = 500) => ({
 })
 
 const handlerTop =
-  (
-    value: Animated.Value,
-    done: () => void,
-    { duration }: { duration: number },
-    reverse?: boolean,
-  ) =>
+  (value: Animated.Value, done: () => void, { duration }: { duration: number }, reverse?: boolean) =>
   () => {
     Animated.timing(value, {
       toValue: reverse ? windowHeight : 0,
