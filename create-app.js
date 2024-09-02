@@ -1,14 +1,15 @@
-#!/usr/bin/env node
-import { cpSync, renameSync, rmSync } from 'fs'
-import { join } from 'path'
 import { execSync } from 'child_process'
+import { cpSync, readFileSync, renameSync, rmSync, mkdirSync } from 'fs'
+import { join, resolve } from 'path'
+import Arborist from '@npmcli/arborist'
+import packlist from 'npm-packlist'
 
 // Enhances source files inside /app with a fresh RN project template.
 const appName = 'ReactigationApp'
 
 console.log('⌛ Initializing a fresh RN project...')
 
-execSync(`npx react-native init ${appName} --skip-git-init true --install-pods true`, {
+execSync(`bunx @react-native-community/cli init ${appName} --skip-git-init true --install-pods true`, {
   // Write output to cnosole.
   stdio: 'inherit',
 })
@@ -26,11 +27,18 @@ execSync('npm run build', {
   stdio: 'inherit',
 })
 
-// Install this package locally, avoiding symlinks.
-execSync('npm install $(npm pack .. | tail -1) --legacy-peer-deps', {
-  cwd: join(process.cwd(), 'app'),
-  stdio: 'inherit',
-})
+const packageName = JSON.parse(readFileSync('./package.json')).name
+const packageDirectory = resolve(`app/node_modules/${packageName}`)
+
+// Package files and copy them to app node_modules.
+// Couldn't get symlinks to work with metro.
+const arborist = new Arborist({ path: process.cwd() })
+const tree = await arborist.loadActual()
+const files = await packlist(tree)
+
+mkdirSync(packageDirectory, { recursive: true })
+
+files.forEach((file) => cpSync(join(process.cwd(), file), join(packageDirectory, file), { recursive: true }))
 
 console.log('')
 console.log('🍞 React Native App created inside /app.')
