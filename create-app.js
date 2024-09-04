@@ -22,11 +22,6 @@ rmSync('app', { recursive: true })
 
 renameSync(appName, 'app')
 
-// Run build to ensure distributed files for plugin exist.
-execSync('npm run build', {
-  stdio: 'inherit',
-})
-
 const packageName = JSON.parse(readFileSync('./package.json')).name
 const packageDirectory = resolve(`app/node_modules/${packageName}`)
 

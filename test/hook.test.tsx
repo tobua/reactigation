@@ -1,7 +1,7 @@
 import React from 'react'
 import { Animated } from 'react-native'
 import { act } from 'react-test-renderer'
-import Navigation, { go, back, destroy } from 'reactigation'
+import Navigation, { go, back, destroy } from '../index'
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 import { Hook } from './components/Hook'

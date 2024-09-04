@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableHighlight, Animated } from 'react-native'
 import { act } from 'react-test-renderer'
-import Navigation, { register, go, back, destroy } from 'reactigation'
+import Navigation, { register, go, back, destroy } from '../index'
 import render from './utils/render-to-tree'
 
 // @ts-ignore Animated won't work in test enviroment, mock it to resolve immediately.
