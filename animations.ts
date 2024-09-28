@@ -82,7 +82,9 @@ const handlerTop =
 const modal = (duration = 500) => ({
   animation: (state: State, done: () => void, reverse = false) => {
     state.left.setValue(0)
-    state.top.setValue(reverse ? 0 : windowHeight)
+    if (!reverse) {
+      state.top.setValue(0) // TODO should be windowHeight but causes issues.
+    }
     state.opacity.setValue(1)
 
     return handlerTop(state.top, done, { duration }, reverse)

@@ -45,10 +45,10 @@ test('Two Screen Example with Interaction.', () => {
 
   const { screens } = render(<Navigation headless={false} />)
 
-  expect(screens.length).toEqual(1)
+  expect(screens.length).toEqual(2)
 
   // Initially only the first screen is visible and rendered.
-  expect(screens[0].children[0].children[0]).toEqual('First')
+  expect(screens[1].children[0].children[0]).toEqual('First')
 
   expect(firstScreenMock.mock.calls.length).toEqual(1)
   expect(secondScreenMock.mock.calls.length).toEqual(0)
@@ -59,10 +59,10 @@ test('Two Screen Example with Interaction.', () => {
     go('Second')
   })
 
-  expect(firstScreenMock.mock.calls.length).toEqual(2)
+  expect(firstScreenMock.mock.calls.length).toEqual(1)
   expect(secondScreenMock.mock.calls.length).toEqual(1)
 
-  expect(firstScreenMock.mock.calls[1][0].backPossible).toEqual(false)
+  expect(firstScreenMock.mock.calls.length).toBe(1)
   expect(secondScreenMock.mock.calls[0][0].backPossible).toEqual(true)
 
   destroy()

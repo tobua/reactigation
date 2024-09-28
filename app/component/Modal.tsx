@@ -1,6 +1,6 @@
-import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native'
-import { go, back, CustomTransition } from 'reactigation'
+import React, { useRef } from 'react'
+import { StyleSheet, View, Text, TouchableOpacity, Platform, TouchableHighlight } from 'react-native'
+import { go, back, CustomTransition, ScreenProps } from 'reactigation'
 
 const styles = StyleSheet.create({
   modal: {
@@ -31,6 +31,25 @@ const styles = StyleSheet.create({
     color: 'black',
     marginBottom: 20,
   },
+  count: {
+    position: 'absolute',
+    right: 80,
+    top: Platform.OS === 'ios' ? 44 : 16,
+    color: 'black',
+    backgroundColor: '#61dafb',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderRadius: 10,
+    borderColor: 'black',
+  },
+  countText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+  },
   description: {
     fontSize: 25,
     color: 'black',
@@ -39,21 +58,30 @@ const styles = StyleSheet.create({
 
 const AlmostFullPeek = CustomTransition.peek(20)
 
-export const Modal = ({ title }) => (
-  <View style={styles.modal}>
-    <TouchableOpacity underlayColor="white" style={styles.closeTouchable} onPress={() => back()}>
-      <Text style={styles.close}>Close</Text>
-    </TouchableOpacity>
-    <Text style={styles.title}>{title}</Text>
-    {title !== 'PeekModal' && (
-      <>
-        <TouchableOpacity onPress={() => go('PeekModal')}>
-          <Text style={styles.description}>Peek Another Modal</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => go('PeekModal', AlmostFullPeek)}>
-          <Text style={styles.description}>Peek Further</Text>
-        </TouchableOpacity>
-      </>
-    )}
-  </View>
-)
+export const Modal = ({ title }: ScreenProps) => {
+  const renderCount = useRef(0)
+
+  renderCount.current += 1
+
+  return (
+    <View style={styles.modal}>
+      <View style={styles.count}>
+        <Text style={styles.countText}>{renderCount.current}</Text>
+      </View>
+      <TouchableHighlight underlayColor="white" style={styles.closeTouchable} onPress={() => back()}>
+        <Text style={styles.close}>Close</Text>
+      </TouchableHighlight>
+      <Text style={styles.title}>{title}</Text>
+      {title !== 'PeekModal' && (
+        <>
+          <TouchableOpacity onPress={() => go('PeekModal')}>
+            <Text style={styles.description}>Peek Another Modal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => go('PeekModal', AlmostFullPeek)}>
+            <Text style={styles.description}>Peek Further</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </View>
+  )
+}

@@ -1,8 +1,5 @@
-import { execSync } from 'child_process'
-import { cpSync, readFileSync, renameSync, rmSync, mkdirSync } from 'fs'
-import { join, resolve } from 'path'
-import Arborist from '@npmcli/arborist'
-import packlist from 'npm-packlist'
+import { execSync } from 'node:child_process'
+import { cpSync, renameSync, rmSync } from 'node:fs'
 
 // Enhances source files inside /app with a fresh RN project template.
 const appName = 'ReactigationApp'
@@ -17,23 +14,18 @@ execSync(`bunx @react-native-community/cli init ${appName} --skip-git-init true 
 cpSync('app/component', `${appName}/component`, { recursive: true })
 cpSync('app/App.tsx', `${appName}/App.tsx`)
 cpSync('app/logo.png', `${appName}/logo.png`)
-
 rmSync('app', { recursive: true })
-
 renameSync(appName, 'app')
 
-const packageName = JSON.parse(readFileSync('./package.json')).name
-const packageDirectory = resolve(`app/node_modules/${packageName}`)
+const output = execSync('bun pm pack', {
+  encoding: 'utf-8',
+})
 
-// Package files and copy them to app node_modules.
-// Couldn't get symlinks to work with metro.
-const arborist = new Arborist({ path: process.cwd() })
-const tree = await arborist.loadActual()
-const files = await packlist(tree)
+const tgzFileName = output.match(/[\w.-]+\.tgz/)[0]
 
-mkdirSync(packageDirectory, { recursive: true })
-
-files.forEach((file) => cpSync(join(process.cwd(), file), join(packageDirectory, file), { recursive: true }))
+execSync(`bun install ../${tgzFileName}`, {
+  cwd: './app',
+})
 
 console.log('')
 console.log('🍞 React Native App created inside /app.')

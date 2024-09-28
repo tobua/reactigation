@@ -29,6 +29,10 @@ export type Screen = {
   props?: Object
 }
 
+export type ScreenProps = { backPossible: boolean; title: string }
+
+export type Props = ScreenProps & { [key: string]: any }
+
 export type State = {
   top: Animated.Value
   left: Animated.Value
@@ -37,4 +41,5 @@ export type State = {
   Top: Screen
   Bottom?: Screen
   reverse?: boolean
+  renderedScreens: { [key: string]: { screen: Screen; props: Props; view?: JSX.Element } }
 }

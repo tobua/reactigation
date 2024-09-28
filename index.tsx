@@ -3,14 +3,14 @@ import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
 import startTransition, { initialPosition, connect, isTransitioning, isTransitionValid } from './transition'
 import { CustomTransition } from './animations'
-import { Transition, Screen, State, TransitionInput } from './types'
+import { Transition, Screen, State, TransitionInput, ScreenProps } from './types'
 
-export { Transition, CustomTransition }
+export { Transition, CustomTransition, type ScreenProps }
 
 // All the registered screens.
 const screens: { [key: string]: Screen } = {}
 // History of the screens visited.
-const history: Screen[] = []
+export const history: Screen[] = []
 
 // React hook: const screen = useCurrentScreen()
 const currentScreenHookListeners: ((screen: string) => void)[] = []
@@ -62,6 +62,9 @@ export const register = (
   if (initial) {
     history[0] = screen
   }
+  if (name in screens) {
+    return console.warn(`Reactigation: Screen "${name}" has already been registered.`)
+  }
   screens[name] = screen
 }
 
@@ -77,6 +80,7 @@ export const initial = (name: string) => {
   history[0] = screens[name]
 }
 
+// TODO logs only in development mode.
 // Go to certain screen.
 export const go = (name: string, transition?: TransitionInput, props?: object) => {
   if (isTransitioning()) {
@@ -93,6 +97,9 @@ export const go = (name: string, transition?: TransitionInput, props?: object) =
     return
   }
   const previousScreen = history[history.length - 1]
+  if (previousScreen.name === name) {
+    return console.warn(`Reactigation: Already on screen ${name}.`)
+  }
   // Make a copy to reuse transition when going back.
   const nextScreen = Object.assign({}, currentScreen, {
     transition: transition || currentScreen.transition,
@@ -141,52 +148,82 @@ BackHandler.addEventListener('hardwareBackPress', () => {
   return true
 })
 
-const renderBottom = ({ Bottom }: State) => {
-  if (!Bottom) {
+function addHistoryProps(screen: Screen) {
+  // TODO are those clones truly necessary?
+  const props = { ...screen.props }
+  const [bottomScreen, topScreen] = history.slice(-2)
+
+  // topScreen missing for history.length === 1
+  if (topScreen && topScreen.name === screen.name) {
+    Object.assign(props, topScreen.props ?? {})
+  }
+
+  if (bottomScreen.name === screen.name) {
+    Object.assign(props, bottomScreen.props ?? {})
+  }
+
+  return props
+}
+
+const updateScreenView = (screen: Screen, state: State, isNextScreen: boolean) => {
+  const newProps = {
+    backPossible: history.length > 1,
+    title: screen.name,
+    ...addHistoryProps(screen),
+  }
+
+  if (screen.name in state.renderedScreens) {
+    const propsChanged = JSON.stringify(newProps) !== JSON.stringify(state.renderedScreens[screen.name].props)
+    if (isNextScreen && propsChanged) {
+      // Update rendered screen.
+      state.renderedScreens[screen.name] = {
+        screen,
+        props: newProps,
+        view: cloneElement(screen.Component, newProps),
+      }
+    }
+  } else {
+    // Initially render screen.
+    state.renderedScreens[screen.name] = {
+      screen,
+      props: newProps,
+      view: cloneElement(screen.Component, newProps),
+    }
+  }
+}
+
+const renderScreen = (screen: Screen, state: State) => {
+  const isTopOrBottomScreen = screen.name === state.Top.name || screen.name === state.Bottom?.name
+  const isTop = screen.name === state.Top.name
+  const isBottom = screen.name === state.Bottom?.name
+  const isNextScreen = !!((isTop && !state.reverse) || (isBottom && state.reverse))
+
+  if (!(screen.name in state.renderedScreens) && !isTopOrBottomScreen) {
+    // Screen doesn't need to be rendered yet.
     return
   }
 
-  const BottomWithProps = cloneElement(Bottom.Component, {
-    backPossible: history.length > 1 && Bottom !== history[0],
-    title: Bottom.name,
-    ...Bottom.props,
-  })
-
-  return (
-    <Animated.View key={`${Bottom.name}_bottom`} style={[styles.back, { backgroundColor: Bottom.background }]}>
-      {BottomWithProps}
-    </Animated.View>
-  )
-}
-
-const renderTop = ({ Top, Bottom, reverse, left, top, opacity, backdrop }: State) => {
-  const TopWithProps = cloneElement(Top.Component, {
-    backPossible: history.length > 1 || (!!reverse && Bottom === history[0]),
-    title: Top.name,
-    ...Top.props,
-  })
-
-  const screen = (
-    <Animated.View
-      key={`${Top.name}_top`}
-      style={[styles.front, { left, top, opacity, backgroundColor: Top.background }]}
-    >
-      {TopWithProps}
-    </Animated.View>
-  )
-
-  if (backdrop) {
-    return (
-      <View key={`${Top.name}_top`} style={styles.stretch}>
-        <View style={styles.backdrop}>
-          <TouchableOpacity style={styles.stretch} onPress={() => back()} />
-        </View>
-        {screen}
-      </View>
-    )
+  if (isTopOrBottomScreen) {
+    // Only top or bottom screen needs to be added or updated.
+    updateScreenView(screen, state, isNextScreen)
   }
 
-  return screen
+  const visibility = !isTopOrBottomScreen ? styles.hidden : isTop ? styles.front : styles.back
+
+  return (
+    <Animated.View
+      aria-label={screen.name}
+      key={screen.name}
+      style={[
+        styles.screen,
+        visibility,
+        { backgroundColor: screen.background },
+        isTop && { left: state.left, top: state.top, opacity: state.opacity },
+      ]}
+    >
+      {state.renderedScreens[screen.name].view}
+    </Animated.View>
+  )
 }
 
 // Disable transitions and render only top screen, useful for programmatic tests.
@@ -196,8 +233,29 @@ export default ({ headless = process.env.NODE_ENV === 'test' }) => {
 
   useEffect(afterRender, [afterRender])
 
-  const Top = renderTop(state)
-  const Bottom = !headless && renderBottom(state)
+  if (headless) {
+    return (
+      <View style={styles.stretch}>
+        <View style={[styles.screen, styles.front, { backgroundColor: state.Top.background }]}>
+          {cloneElement(state.Top.Component, {
+            backPossible: history.length > 1,
+            title: state.Top.name,
+            ...state.Top.props,
+          })}
+        </View>
+      </View>
+    )
+  }
 
-  return <View style={styles.stretch}>{[Bottom, Top]}</View>
+  const existingScreens = Object.values(screens)
+    .map((screen) => renderScreen(screen, state))
+    .filter(Boolean)
+
+  existingScreens.unshift(
+    <View key="backdrop" style={[styles.stretch, state.backdrop && styles.backdrop]}>
+      <TouchableOpacity style={styles.stretch} onPress={() => back()} />
+    </View>,
+  )
+
+  return <View style={styles.stretch}>{existingScreens}</View>
 }

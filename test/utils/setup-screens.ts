@@ -1,10 +1,12 @@
 /* eslint-env jest */
-import { register } from 'reactigation'
+import { register, Transition } from 'reactigation'
 import createTestScreen from '../components/Screen'
 
-export default (screens: (string | { name: string; options?: { initial?: boolean; background?: string } })[]) => {
+export default (
+  screens: (string | { name: string; options?: { initial?: boolean; background?: string; transition?: Transition } })[],
+) => {
   return screens.map((screen) => {
-    let name
+    let name: string
     let options = {} as any
 
     if (typeof screen === 'string') {
@@ -13,6 +15,7 @@ export default (screens: (string | { name: string; options?: { initial?: boolean
       name = screen.name
       options = screen.options
     }
+
     const mock = jest.fn()
     const effectMock = jest.fn()
     const component = createTestScreen(name, mock, effectMock)

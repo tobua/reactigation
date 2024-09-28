@@ -26,7 +26,7 @@ test('Hook is called with initial screen.', () => {
     </>,
   )
 
-  expect(wrappers.length).toEqual(1)
+  expect(wrappers.length).toEqual(2)
   expect(tree[1].type).toEqual('View')
   expect(tree[1].children).toEqual(null)
 

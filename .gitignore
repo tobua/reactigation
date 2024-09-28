@@ -1,7 +1,7 @@
 node_modules
 bun.lockb
-dist
 ReactigationApp
+*.tgz
 app/**/*
 !app/App.tsx
 !app/logo.png

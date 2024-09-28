@@ -24,6 +24,8 @@ export default (Navigation: JSX.Element) => {
   return {
     root: (rendered as unknown as ReactTestRenderer).root,
     tree,
+    // @ts-ignore
+    currentScreens: () => rendered.toJSON().children,
     wrapper: screensRoot,
     wrappers: screensRoot.children,
     screens: screensRoot.children.map((wrapper: any) => wrapper.children[0]),

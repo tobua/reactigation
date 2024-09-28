@@ -22,6 +22,7 @@ export const initialPosition: (Top: Screen) => State = (Top) => ({
   left: new Animated.Value(0),
   top: new Animated.Value(0),
   opacity: new Animated.Value(1),
+  renderedScreens: {},
 })
 
 export const isTransitioning = () => running

@@ -4,35 +4,18 @@ import { Static } from './component/Static'
 import { Screen } from './component/Screen'
 import { Modal } from './component/Modal'
 
-// All possible screen components.
-const Screens = {
-  First: {
-    component: <Screen key="First" title="FirstScreen" showAnimations links={['Second']} />,
-  },
-  Second: {
-    component: <Screen key="Second" title="SecondScreen" links={['First', 'Third']} />,
-  },
-  Third: {
-    component: <Screen key="Third" title="ThirdScreen" showAnimations links={['Second']} />,
-    background: 'lightgray',
-  },
-  Modal: {
-    component: <Modal key="Modal" title="Modal" />,
-    transition: Transition.modal,
-  },
-  PeekModal: {
-    component: <Modal key="PeekModal" title="Peek Modal" />,
-    transition: Transition.peek,
-  },
-}
-
-// Register screens.
-Object.entries(Screens).map(([name, configuration]) =>
-  register(configuration.component, name, {
-    transition: configuration.transition,
-    background: configuration.background,
-  })
-)
+// Register all screens.
+register(<Screen key="First" title="FirstScreen" showAnimations links={['Second']} />, 'First')
+register(<Screen key="Second" title="SecondScreen" links={['First', 'Third']} />, 'Second')
+register(<Screen key="Third" title="ThirdScreen" showAnimations links={['Second']} />, 'Third', {
+  background: 'lightgray',
+})
+register(<Modal key="Modal" title="Modal" />, 'Modal', {
+  transition: Transition.modal,
+})
+register(<Modal key="PeekModal" title="Peek Modal" />, 'PeekModal', {
+  transition: Transition.peek,
+})
 
 export default () => (
   <>

@@ -42,11 +42,7 @@ export const Static = () => {
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       {['First', 'Second', 'Third'].map((screenName) => (
         <TouchableOpacity key={screenName} onPress={() => go(screenName, 'none')}>
-          <Text
-            style={[styles.description, currentScreen === screenName ? styles.bold : undefined]}
-          >
-            {screenName}
-          </Text>
+          <Text style={[styles.description, currentScreen === screenName ? styles.bold : undefined]}>{screenName}</Text>
         </TouchableOpacity>
       ))}
     </View>

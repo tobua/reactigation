@@ -14,7 +14,7 @@ export const Screen = ({
   useEffect(() => {
     effectMock(props)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [props])
 
   renderMock(props, props.title)
 
