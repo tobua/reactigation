@@ -60,7 +60,12 @@ export default (
   }
 
   // After state is set and new screens rendered, calling this handler starts the animation.
-  afterRender = options.headless ? () => {} : transition.animation(state, done, reverse) || (() => {})
+  afterRender = options.headless
+    ? () => {}
+    : () => {
+        // It's important to bind this in a separate scope, as it will flicker otherwise.
+        transition.animation(state, done, reverse)?.()
+      }
 
   // Skip animation.
   if (options.headless) {

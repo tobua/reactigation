@@ -192,23 +192,27 @@ const updateScreenView = (screen: Screen, state: State, isNextScreen: boolean) =
   }
 }
 
-const renderScreen = (screen: Screen, state: State) => {
-  const isTopOrBottomScreen = screen.name === state.Top.name || screen.name === state.Bottom?.name
-  const isTop = screen.name === state.Top.name
-  const isBottom = screen.name === state.Bottom?.name
-  const isNextScreen = !!((isTop && !state.reverse) || (isBottom && state.reverse))
+function getScreenPosition(name: string, state: State) {
+  return {
+    isTopOrBottomScreen: name === state.Top.name || name === state.Bottom?.name,
+    isTop: name === state.Top.name,
+    isBottom: name === state.Bottom?.name,
+  }
+}
 
-  if (!(screen.name in state.renderedScreens) && !isTopOrBottomScreen) {
+const renderScreen = (screen: Screen, state: State) => {
+  const position = getScreenPosition(screen.name, state)
+  const isNextScreen = !!((position.isTop && !state.reverse) || (position.isBottom && state.reverse))
+
+  if (!(screen.name in state.renderedScreens) && !position.isTopOrBottomScreen) {
     // Screen doesn't need to be rendered yet.
     return
   }
 
-  if (isTopOrBottomScreen) {
+  if (position.isTopOrBottomScreen) {
     // Only top or bottom screen needs to be added or updated.
     updateScreenView(screen, state, isNextScreen)
   }
-
-  const visibility = !isTopOrBottomScreen ? styles.hidden : isTop ? styles.front : styles.back
 
   return (
     <Animated.View
@@ -216,14 +220,34 @@ const renderScreen = (screen: Screen, state: State) => {
       key={screen.name}
       style={[
         styles.screen,
-        visibility,
         { backgroundColor: screen.background },
-        isTop && { left: state.left, top: state.top, opacity: state.opacity },
+        position.isTop && { left: state.left, top: state.top, opacity: state.opacity },
       ]}
     >
       {state.renderedScreens[screen.name].view}
     </Animated.View>
   )
+}
+
+function orderScreens(existingScreens: JSX.Element[], state: State) {
+  existingScreens.sort((firstScreen, secondScreen) => {
+    const firstName = firstScreen.props['aria-label']
+    const secondName = secondScreen.props['aria-label']
+    const firstPosition = getScreenPosition(firstName, state)
+    const secondPosition = getScreenPosition(secondName, state)
+
+    const getSortPriority = (position: { isTopOrBottomScreen: boolean; isTop: boolean; isBottom: boolean }) => {
+      if (position.isTop) {
+        return 3
+      }
+      if (position.isBottom) {
+        return 2
+      }
+      return 1
+    }
+
+    return getSortPriority(firstPosition) - getSortPriority(secondPosition)
+  })
 }
 
 // Disable transitions and render only top screen, useful for programmatic tests.
@@ -236,7 +260,7 @@ export default ({ headless = process.env.NODE_ENV === 'test' }) => {
   if (headless) {
     return (
       <View style={styles.stretch}>
-        <View style={[styles.screen, styles.front, { backgroundColor: state.Top.background }]}>
+        <View style={[styles.screen, { backgroundColor: state.Top.background }]}>
           {cloneElement(state.Top.Component, {
             backPossible: history.length > 1,
             title: state.Top.name,
@@ -249,10 +273,15 @@ export default ({ headless = process.env.NODE_ENV === 'test' }) => {
 
   const existingScreens = Object.values(screens)
     .map((screen) => renderScreen(screen, state))
-    .filter(Boolean)
+    .filter((screen): screen is NonNullable<typeof screen> => screen !== null && screen !== undefined)
 
-  existingScreens.unshift(
-    <View key="backdrop" style={[styles.stretch, state.backdrop && styles.backdrop]}>
+  orderScreens(existingScreens, state)
+
+  // Add to second last position, to be between top and bottom.
+  existingScreens.splice(
+    existingScreens.length - 1,
+    0,
+    <View key="backdrop" style={[styles.stretch, state.backdrop ? styles.backdrop : styles.hideBackdrop]}>
       <TouchableOpacity style={styles.stretch} onPress={() => back()} />
     </View>,
   )

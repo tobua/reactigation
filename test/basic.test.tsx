@@ -5,7 +5,6 @@ import Navigation, { go, back, destroy, Transition, initial, history } from '../
 import render from './utils/render-to-tree'
 import setupScreens from './utils/setup-screens'
 import { Screen } from './components/Screen'
-import { styles } from '../styles'
 
 const mergeObjects = (input: object[]) => {
   return input.reduce((result, style) => {
@@ -77,9 +76,9 @@ test('Can navigate between screens.', () => {
 
   let screens = currentScreens()
 
-  expect(screens[1].props['aria-label']).toBe(names[0])
+  expect(screens.length).toBe(3)
+  expect(screens[0].props['aria-label']).toBe(names[0])
   expect(screens[2].props['aria-label']).toBe(names[1])
-  expect(screens[2].props.style.zIndex).toBe(styles.front.zIndex)
 
   act(() => {
     go(names[2])
@@ -87,8 +86,8 @@ test('Can navigate between screens.', () => {
 
   screens = currentScreens()
 
+  expect(screens.length).toBe(4)
   expect(screens[3].props['aria-label']).toBe(names[2])
-  expect(screens[3].props.style.zIndex).toBe(styles.front.zIndex)
 
   destroy()
 })
@@ -208,10 +207,8 @@ test('Can navigate to modal.', () => {
   expect(input[0].effectMock.calls.length).toEqual(1)
   expect(input[3].mock.calls.length).toEqual(1)
   expect(input[3].mock.calls[0][0].backPossible).toEqual(true)
-  expect(screens[1].props['aria-label']).toBe('FirstScreen')
-  expect(screens[1].props.style.zIndex).toBe(styles.back.zIndex)
+  expect(screens[0].props['aria-label']).toBe('FirstScreen')
   expect(screens[2].props['aria-label']).toBe('Modal')
-  expect(screens[2].props.style.zIndex).toBe(styles.front.zIndex)
 
   act(() => {
     back()
@@ -226,11 +223,9 @@ test('Can navigate to modal.', () => {
 
   expect(input[0].mock.calls.length).toEqual(1)
   expect(input[3].mock.calls.length).toEqual(1)
-  expect(screens[0].props.style.zIndex).toBe(undefined)
-  expect(screens[1].props['aria-label']).toBe('FirstScreen')
-  expect(screens[1].props.style.zIndex).toBe(styles.back.zIndex)
+  expect(screens[1].props['aria-label']).toBe(undefined)
+  expect(screens[0].props['aria-label']).toBe('FirstScreen')
   expect(screens[2].props['aria-label']).toBe('Modal')
-  expect(screens[2].props.style.zIndex).toBe(styles.front.zIndex)
 
   destroy()
 })
@@ -498,9 +493,9 @@ test('Background of screen can be configured initially and with go().', () => {
 
   screens = root.findAllByType(Animated.View)
 
+  expect(screens.length).toBe(3)
   // @ts-ignore
   expect(screens[2]._fiber.key).toEqual('SecondScreen')
-  expect(mergeObjects(screens[2].props.style).zIndex).toBe(styles.front.zIndex)
   expect(mergeObjects(screens[2].props.style).backgroundColor).toBe('red')
 
   act(() => {
@@ -509,9 +504,9 @@ test('Background of screen can be configured initially and with go().', () => {
 
   screens = root.findAllByType(Animated.View)
 
+  expect(screens.length).toBe(4)
   // @ts-ignore
   expect(screens[3]._fiber.key).toEqual('ThirdScreen')
-  expect(mergeObjects(screens[3].props.style).zIndex).toBe(styles.front.zIndex)
   expect(mergeObjects(screens[3].props.style).backgroundColor).toBe('blue')
 
   destroy()
