@@ -27,6 +27,12 @@ execSync(`bun install ../${tgzFileName}`, {
   cwd: './app',
 })
 
+console.log('⌛ Updating pods for new architecture.')
+
+execSync('RCT_NEW_ARCH_ENABLED=1 pod update', {
+  cwd: './app/ios',
+})
+
 console.log('')
 console.log('🍞 React Native App created inside /app.')
 console.log('🛠️  To run the example with the plugin included:')
