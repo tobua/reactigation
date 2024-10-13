@@ -3,7 +3,7 @@ import { Animated, View, BackHandler, TouchableOpacity } from 'react-native'
 import { styles } from './styles'
 import startTransition, { initialPosition, connect, isTransitioning, isTransitionValid } from './transition'
 import { CustomTransition } from './animations'
-import { Transition, Screen, State, TransitionInput, ScreenProps } from './types'
+import { Transition, Screen, State, TransitionInput, type ScreenProps } from './types'
 
 export { Transition, CustomTransition, type ScreenProps }
 
@@ -11,6 +11,8 @@ export { Transition, CustomTransition, type ScreenProps }
 const screens: { [key: string]: Screen } = {}
 // History of the screens visited.
 export const history: Screen[] = []
+// Useful for tests when rerendering, but not back on first screen.
+export const reset = () => history.splice(0, history.length, history[0])
 
 // React hook: const screen = useCurrentScreen()
 const currentScreenHookListeners: ((screen: string) => void)[] = []
