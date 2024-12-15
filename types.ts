@@ -1,3 +1,4 @@
+import type React from 'react'
 import type { Animated } from 'react-native'
 
 export type AnimationHandler = (state: State, done: () => void, reverse?: boolean) => (() => void) | null
@@ -23,7 +24,7 @@ export type TransitionInput = Transition | TransitionString | Animation
 
 export type Screen = {
   name: string
-  Component: JSX.Element
+  Component: React.JSX.Element
   transition: TransitionInput
   background: string
   props?: Object
@@ -41,5 +42,5 @@ export type State = {
   Top: Screen
   Bottom?: Screen
   reverse?: boolean
-  renderedScreens: { [key: string]: { screen: Screen; props: Props; view?: JSX.Element } }
+  renderedScreens: { [key: string]: { screen: Screen; props: Props; view?: React.JSX.Element } }
 }

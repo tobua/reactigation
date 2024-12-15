@@ -41,7 +41,7 @@ export const useCurrentScreen = () => {
 
 // Register a screen.
 export const register = (
-  Component: JSX.Element,
+  Component: React.JSX.Element,
   name: string,
   configuration: { transition?: TransitionInput; background?: string; initial?: boolean } = {
     transition: Transition.regular,
@@ -231,7 +231,7 @@ const renderScreen = (screen: Screen, state: State) => {
   )
 }
 
-function orderScreens(existingScreens: JSX.Element[], state: State) {
+function orderScreens(existingScreens: React.JSX.Element[], state: State) {
   existingScreens.sort((firstScreen, secondScreen) => {
     const firstName = firstScreen.props['aria-label']
     const secondName = secondScreen.props['aria-label']

@@ -1,7 +1,8 @@
 /* eslint-env jest */
+import type React from 'react'
 import renderer, { ReactTestRenderer, act } from 'react-test-renderer'
 
-export default (Navigation: JSX.Element) => {
+export default (Navigation: React.JSX.Element) => {
   let rendered: ReactTestRenderer | null = null
   // act to ensure effects are flushed in initial render.
   act(() => {
